@@ -16,7 +16,9 @@ var app = new Vue({
     scans: [],
     links: 'ignore',
     cameras: [],
-    activeCamera: null
+    activeCamera: null,
+    playAudio: false,
+    scanAudio: null
   },
   methods: {
     start: function () {
@@ -39,6 +41,9 @@ var app = new Vue({
           return trigger.dataset.clipboard;
         }
       });
+
+      var audioElem = $('<audio>').attr('src', 'scan.mp3').attr('preload', 'auto');
+      this.scanAudio = audioElem[0];
     },
 
     deleteScan: function(scan) {
@@ -66,6 +71,10 @@ var app = new Vue({
           + escapeHtml(content)
           + '" target="_blank" data-dismiss="snackbar">'
           + '<span class="icon icon-md">open_in_new</span> Open</a>';
+      }
+
+      if (this.playAudio) {
+        this.scanAudio.play();
       }
 
       $('body').snackbar({
