@@ -15,14 +15,11 @@ function CameraQrScanner(previewContainer) {
   this.getCameras = function (callback) {
     navigator.mediaDevices.enumerateDevices()
       .then(function (devices) {
-        var result = [];
-        for (var i = 0; i < devices.length; ++i) {
-          if (devices[i].kind === 'videoinput') {
-            result.push({ id: devices[i].deviceId, name: devices[i].label });
-          }
-        }
+        var results = devices
+          .filter(d => d.kind === 'videoinput')
+          .map(d => { return { id: d.deviceId, name: d.label }; });
 
-        callback(result);
+        callback(results);
       });
   };
 

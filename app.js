@@ -23,8 +23,15 @@ var app = new Vue({
       });
     },
 
+    deleteScan: function(scan) {
+      this.scans = this.scans.filter(s => s.date !== scan.date);
+    },
+
     addScan: function (content) {
-      this.scans.push({ content: content, date: new Date() });
+      this.scans.push({
+        content: content,
+        date: +(new Date())
+      });
     },
 
     onScanResult: function (content) {

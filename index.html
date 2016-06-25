@@ -18,10 +18,10 @@
 					<div v-for="scan in scans | orderBy 'date' -1" class="tile">
 						<div class="tile-side pull-left">
 						</div>
-						<div class="tile-action tile-action-show">
+						<div class="tile-action">
 							<ul class="nav nav-list margin-no pull-right">
 								<li>
-									<a class="text-black-sec waves-attach" href="javascript:void(0)"><span class="icon icon-md">clear</span></a>
+									<a class="text-black-sec waves-attach" href="javascript:void(0)" v-on:click="deleteScan(scan)"><span class="icon icon-md">clear</span></a>
 								</li>
 							</ul>
 						</div>
