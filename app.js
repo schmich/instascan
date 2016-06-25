@@ -21,6 +21,12 @@ var app = new Vue({
       this.$watch('activeCamera', function (camera) {
         scanner.start(camera);
       });
+
+      new Clipboard('.clipboard-copy', {
+        text: function (trigger) {
+          return trigger.dataset.clipboard;
+        }
+      });
     },
 
     deleteScan: function(scan) {

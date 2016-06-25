@@ -7,6 +7,7 @@
   <script type="text/javascript" src="zxing.js"></script>
   <script type="text/javascript" src="qr.js"></script>
   <script type="text/javascript" src="material.min.js"></script>
+  <script type="text/javascript" src="clipboard.min.js"></script>
   <script type="text/javascript" src="vue.js"></script>
 </head>
 <body id="app">
@@ -24,7 +25,10 @@
 						<div class="tile-action">
 							<ul class="nav nav-list margin-no pull-right">
 								<li>
-									<a class="text-black-sec waves-attach" href="javascript:void(0)" v-on:click="deleteScan(scan)"><span class="icon icon-md">clear</span></a>
+									<a class="text-black-sec waves-attach waves-effect clipboard-copy" href="#" data-clipboard="{{ scan.content }}"><span class="icon icon-md">content_copy</span></a>
+								</li>
+								<li>
+									<a class="text-black-sec waves-attach waves-effect" href="#" v-on:click="deleteScan(scan)"><span class="icon icon-md">clear</span></a>
 								</li>
 							</ul>
 						</div>
@@ -58,11 +62,6 @@
 					<form>
 						<fieldset>
 							<div class="form-group">
-								<div class="checkbox switch">
-									<label for="ui_switch_example_3">
-										<input class="access-hide" id="ui_switch_example_3" name="ui_switch_example" type="checkbox"><span class="switch-toggle"></span>Copy data to clipboard
-									</label>
-								</div>
 								<div class="checkbox switch">
 									<label for="ui_switch_example_2">
 										<input class="access-hide" id="ui_switch_example_2" name="ui_switch_example" type="checkbox"><span class="switch-toggle"></span>Play a sound
