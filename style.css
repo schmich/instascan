@@ -7,25 +7,15 @@ html, body {
 video {
   margin: 0;
   padding: 0;
+  height: 100%;
   width: 100%;
+  object-fit: cover;
   -moz-transform: scaleX(-1);
   -o-transform: scaleX(-1);
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
   filter: FlipH;
   -ms-filter: "FlipH";
-}
-#sensor {
-  //border: 5px dashed #00ff00;
-  left: calc(50% - 50px);
-  top: calc(50% - 50px);
-  width: 100px;
-  height: 100px;
-  position: absolute;
-  z-index: 100;
-}
-#sensor-camera {
-  position: relative;
 }
 #overlay {
   position: relative;
