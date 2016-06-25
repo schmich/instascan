@@ -15,7 +15,7 @@
 			<div class="menu-content">
 				<span class="menu-logo">History</span>
         <div class="tile-wrap">
-					<div v-for="scan in scans" class="tile">
+					<div v-for="scan in scans | orderBy 'date' -1" class="tile">
 						<div class="tile-side pull-left">
 						</div>
 						<div class="tile-action tile-action-show">

@@ -24,7 +24,7 @@ var app = new Vue({
     },
 
     addScan: function (content) {
-      this.scans.push({ content: content });
+      this.scans.push({ content: content, date: new Date() });
     },
 
     onScanResult: function (content) {
