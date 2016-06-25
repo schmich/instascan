@@ -2,13 +2,25 @@ var app = new Vue({
   el: '#app',
   data: {
     scans: [],
-    links: 'ignore'
+    links: 'ignore',
+    cameras: [],
+    activeCamera: null
   },
   methods: {
     start: function () {
+      var self = this;
+
       var scanner = new CameraQrScanner(document.querySelector('#camera'));
       scanner.onResult = this.onScanResult;
-      scanner.start();
+
+      scanner.getCameras(function (cameras) {
+        self.cameras = cameras;
+        self.activeCamera = cameras[0].id;
+      });
+
+      this.$watch('activeCamera', function (camera) {
+        scanner.start(camera);
+      });
     },
 
     addScan: function (content) {

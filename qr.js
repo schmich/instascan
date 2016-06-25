@@ -1,6 +1,8 @@
 function CameraQrScanner(previewContainer) {
   var self = this;
 
+  this.stream = null;
+
   var cameraElement = document.createElement('video');
   cameraElement.setAttribute('autoplay', 'autoplay');
   previewContainer.appendChild(cameraElement);
@@ -8,24 +10,49 @@ function CameraQrScanner(previewContainer) {
   var canvas = document.createElement('canvas');
   canvas.style.display = 'none';
 
-  var constraints = {
-    audio: false,
-    video: {
-      mandatory: {
-        minWidth: 400,
-        maxWidth: 600,
-        minAspectRatio: 1.6,
-        sourceId: "fc77c2a2f07de37fa5013871b4914ea0383678310a50f0469d0f84075f8c4334"
-      },
-      optional: []
-    }
-  };
-
   this.onResult = function () { };
 
-  this.start = function () {
+  this.getCameras = function (callback) {
+    navigator.mediaDevices.enumerateDevices()
+      .then(function (devices) {
+        var result = [];
+        for (var i = 0; i < devices.length; ++i) {
+          if (devices[i].kind === 'videoinput') {
+            result.push({ id: devices[i].deviceId, name: devices[i].label });
+          }
+        }
+
+        callback(result);
+      });
+  };
+
+  this.start = function (cameraId) {
+    if (this.stream) {
+      for (let stream of this.stream.getVideoTracks()) {
+        stream.stop();
+      }
+
+      this.stream = null;
+    }
+
+    var constraints = {
+      audio: false,
+      video: {
+        mandatory: {
+          minWidth: 400,
+          maxWidth: 600,
+          minAspectRatio: 1.6
+        },
+        optional: []
+      }
+    };
+
+    if (cameraId) {
+      constraints.video.mandatory.sourceId = cameraId;
+    }
+
     navigator.webkitGetUserMedia(constraints, function (stream) {
-      console.log(stream);
+      self.stream = stream;
       cameraElement.src = window.URL.createObjectURL(stream);
       startScan();
     }, function (err) {

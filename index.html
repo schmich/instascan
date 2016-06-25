@@ -38,7 +38,20 @@
 			<div class="menu-content">
 				<span class="menu-logo">Settings</span>
 				<div class="container">
-					<h4>After scanning:</h4>
+					<h4>Camera</h4>
+					<form>
+						<fieldset>
+							<div class="form-group">
+								<div v-for="camera in cameras" class="radiobtn radiobtn-adv">
+									<label for="camera-{{$index}}">
+										<input class="access-hide" id="camera-{{$index}}" name="activeCamera" type="radio" v-bind:value="camera.id" v-model="activeCamera">{{ camera.name }}
+										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
+									</label>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+					<h4>After scanning</h4>
 					<form>
 						<fieldset>
 							<div class="form-group">
@@ -47,8 +60,6 @@
 										<input class="access-hide" id="ui_switch_example_3" name="ui_switch_example" type="checkbox"><span class="switch-toggle"></span>Copy data to clipboard
 									</label>
 								</div>
-							</div>
-							<div class="form-group">
 								<div class="checkbox switch">
 									<label for="ui_switch_example_2">
 										<input class="access-hide" id="ui_switch_example_2" name="ui_switch_example" type="checkbox"><span class="switch-toggle"></span>Play a sound
@@ -57,7 +68,7 @@
 							</div>
 						</fieldset>
 					</form>
-					<h4>After scanning a link:</h4>
+					<h4>After scanning a link</h4>
 					<form>
 						<fieldset>
 							<div class="form-group">
