@@ -14,6 +14,9 @@
 		<div class="menu-scroll">
 			<div class="menu-content">
 				<span class="menu-logo">History</span>
+        <div class="container" v-if="!scans.length">
+          <p>You haven't scanned anything yet</p>
+        </div>
         <div class="tile-wrap">
 					<div v-for="scan in scans | orderBy 'date' -1" class="tile">
 						<div class="tile-side pull-left">
