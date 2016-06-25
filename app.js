@@ -53,18 +53,29 @@ var app = new Vue({
     },
 
     onScanResult: function (content) {
+      var isHttpUrl = content.match(/^https?:\/\//i);
+
+      var snackbarContent = 'Scanned: '
+        + content
+        + '<a href="#" class="clipboard-copy" data-dismiss="snackbar" data-clipboard="'
+        + escapeHtml(content)
+        + '"><span class="icon icon-md">content_copy</span> Copy</a>';
+
+      if (isHttpUrl) {
+        snackbarContent += '<a href="'
+          + escapeHtml(content)
+          + '" target="_blank" data-dismiss="snackbar">'
+          + '<span class="icon icon-md">open_in_new</span> Open</a>';
+      }
+
       $('body').snackbar({
         alive: 5 * 1000,
-        content: 'Scanned: '
-               + content
-               + '<a href="#" class="clipboard-copy" data-dismiss="snackbar" data-clipboard="'
-               + escapeHtml(content)
-               + '"><span class="icon icon-md">content_copy</span> Copy</a>'
+        content: snackbarContent
       });
 
       this.addScan(content);
 
-      if (this.links !== 'ignore' && content.match(/^https?:\/\//i)) {
+      if (this.links !== 'ignore' && isHttpUrl) {
         if (this.links === 'new-tab') {
           var win = window.open(content, '_blank');
           win.focus();
