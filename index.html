@@ -1,0 +1,50 @@
+<html>
+<head>
+  <script type="text/javascript" src="zxing.js"></script>
+  <script type="text/javascript" src="qr.js"></script>
+  <style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+  }
+  video {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+  }
+  #sensor {
+    //border: 5px dashed #00ff00;
+    left: calc(50% - 50px);
+    top: calc(50% - 50px);
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    z-index: 100;
+  }
+  #sensor-camera {
+    position: relative;
+  }
+  </style>
+</head>
+<body>
+  <div id="camera"/>
+  <script language="javascript">
+    var scanner = new CameraQrScanner(document.querySelector('#camera'));
+    scanner.onresult = function (res) {
+      console.log(res);
+      if (res.match(/^https?:\/\//i)) {
+        var win = window.open(res, '_blank');
+        win.focus();
+      }
+    };
+    scanner.start();
+  </script>
+</body>
+</html>
