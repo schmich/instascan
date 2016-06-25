@@ -1,3 +1,15 @@
+function escapeHtml(text) {
+  var map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+
+  return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+}
+
 var app = new Vue({
   el: '#app',
   data: {
@@ -43,7 +55,11 @@ var app = new Vue({
     onScanResult: function (content) {
       $('body').snackbar({
         alive: 5 * 1000,
-        content: 'Scanned: ' + content
+        content: 'Scanned: '
+               + content
+               + '<a href="#" class="clipboard-copy" data-dismiss="snackbar" data-clipboard="'
+               + escapeHtml(content)
+               + '"><span class="icon icon-md">content_copy</span> Copy</a>'
       });
 
       this.addScan(content);

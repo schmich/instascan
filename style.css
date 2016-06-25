@@ -48,10 +48,12 @@ video {
 .snackbar-inner {
   font-family: Roboto;
   background: #388E3C;
-  text-shadow: none;
   color: #fff;
   font-size: 20px;
   padding: 20px;
+}
+.snackbar-inner a {
+  color: #fff;
 }
 .menu h4 {
   padding: 0;
