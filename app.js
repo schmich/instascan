@@ -1,7 +1,7 @@
 var app = new Vue({
   el: '#app',
   data: {
-    history: [],
+    scans: [],
     links: 'ignore'
   },
   methods: {
@@ -11,8 +11,8 @@ var app = new Vue({
       scanner.start();
     },
 
-    addItem: function (content) {
-      this.history.push({ content: content });
+    addScan: function (content) {
+      this.scans.push({ content: content });
     },
 
     onScanResult: function (content) {
@@ -21,7 +21,7 @@ var app = new Vue({
         content: 'Scanned: ' + content
       });
 
-      this.addItem(content);
+      this.addScan(content);
 
       if (this.links !== 'ignore' && content.match(/^https?:\/\//i)) {
         if (this.links === 'new-tab') {

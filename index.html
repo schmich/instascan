@@ -15,7 +15,7 @@
 			<div class="menu-content">
 				<span class="menu-logo">History</span>
         <div class="tile-wrap">
-					<div v-for="item in history" class="tile">
+					<div v-for="scan in scans" class="tile">
 						<div class="tile-side pull-left">
 						</div>
 						<div class="tile-action tile-action-show">
@@ -26,7 +26,7 @@
 							</ul>
 						</div>
 						<div class="tile-inner">
-							<span class="text-overflow">{{ item.content }}</span>
+							<span class="text-overflow">{{ scan.content }}</span>
 						</div>
 					</div>
         </div>
