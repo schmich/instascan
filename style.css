@@ -1,0 +1,65 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  overflow: hidden;
+}
+video {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+#sensor {
+  //border: 5px dashed #00ff00;
+  left: calc(50% - 50px);
+  top: calc(50% - 50px);
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  z-index: 100;
+}
+#sensor-camera {
+  position: relative;
+}
+#overlay {
+  position: relative;
+}
+#history-menu, #settings-menu {
+  opacity: 0.7;
+}
+#menu-button {
+  top: 10px;
+  left: 20px;
+  position: absolute;
+  z-index: 2;
+}
+#settings-button {
+  top: 10px;
+  right: 20px;
+  position: absolute;
+  z-index: 2;
+}
+#progress {
+  position: fixed;
+  bottom: 10px;
+  left: 20px;
+  z-index: 2;
+}
+.snackbar {
+  display: flex;
+  justify-content: center;
+}
+.snackbar-inner {
+  font-family: Roboto;
+  background: #388E3C;
+  text-shadow: none;
+  color: #fff;
+  font-size: 20px;
+  padding: 20px;
+}

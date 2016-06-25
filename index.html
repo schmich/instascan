@@ -1,48 +1,102 @@
 <html>
 <head>
+	<link href="material.min.css" rel="stylesheet">
+	<link href="style.css" rel="stylesheet">
+  <script type="text/javascript" src="jquery-3.0.0.min.js"></script>
   <script type="text/javascript" src="zxing.js"></script>
   <script type="text/javascript" src="qr.js"></script>
-  <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: #000;
-  }
-  video {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    -moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-    filter: FlipH;
-    -ms-filter: "FlipH";
-  }
-  #sensor {
-    //border: 5px dashed #00ff00;
-    left: calc(50% - 50px);
-    top: calc(50% - 50px);
-    width: 100px;
-    height: 100px;
-    position: absolute;
-    z-index: 100;
-  }
-  #sensor-camera {
-    position: relative;
-  }
-  </style>
+  <script type="text/javascript" src="material.min.js"></script>
 </head>
 <body>
-  <div id="camera"/>
+  <nav class="menu" id="history-menu">
+		<div class="menu-scroll">
+			<div class="menu-content">
+				<span class="menu-logo">History</span>
+        <div class="tile-wrap">
+					<div class="tile">
+						<div class="tile-side pull-left">
+						</div>
+						<div class="tile-action tile-action-show">
+							<ul class="nav nav-list margin-no pull-right">
+								<li>
+									<a class="text-black-sec waves-attach" href="javascript:void(0)"><span class="icon icon-md">clear</span></a>
+								</li>
+							</ul>
+						</div>
+						<div class="tile-inner">
+							<span class="text-overflow">http://news.ycombinator.com</span>
+						</div>
+					</div>
+					<div class="tile">
+						<div class="tile-side pull-left">
+						</div>
+						<div class="tile-action tile-action-show">
+							<ul class="nav nav-list margin-no pull-right">
+								<li>
+									<a class="text-black-sec waves-attach" href="javascript:void(0)"><span class="icon icon-md">clear</span></a>
+								</li>
+							</ul>
+						</div>
+						<div class="tile-inner">
+							<span class="text-overflow">#1234.567</span>
+						</div>
+					</div>
+        </div>
+			</div>
+		</div>
+	</nav>
+  <nav class="menu menu-right menu-lg" id="settings-menu">
+		<div class="menu-scroll">
+			<div class="menu-content">
+				<span class="menu-logo">Settings</span>
+				<div class="container">
+					<p>On successful scan:</p>
+					<form>
+						<fieldset>
+							<div class="form-group">
+								<div class="checkbox switch">
+									<label for="ui_switch_example_1">
+										<input class="access-hide" id="ui_switch_example_1" name="ui_switch_example" type="checkbox"><span class="switch-toggle"></span>Open links in a new tab
+									</label>
+								</div>
+								<div class="checkbox switch">
+									<label for="ui_switch_example_3">
+										<input class="access-hide" id="ui_switch_example_3" name="ui_switch_example" type="checkbox"><span class="switch-toggle"></span>Copy data to clipboard
+									</label>
+								</div>
+								<div class="checkbox switch">
+									<label for="ui_switch_example_2">
+										<input class="access-hide" id="ui_switch_example_2" name="ui_switch_example" type="checkbox"><span class="switch-toggle"></span>Play a sound
+									</label>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+	</nav>
+  <div class="overlay">
+    <a id="menu-button" class="fbtn fbtn-brand fbtn-lg waves-attach waves-circle" data-toggle="menu" href="#history-menu">
+      <span class="icon icon-lg">history</span>
+    </a>
+    <a id="settings-button" class="fbtn fbtn-brand-accent fbtn-lg waves-attach waves-circle" data-toggle="menu" href="#settings-menu">
+      <span class="icon icon-lg">settings</span>
+    </a>
+    <div id="camera"/>
+  </div>
   <script language="javascript">
     var scanner = new CameraQrScanner(document.querySelector('#camera'));
     scanner.onresult = function (res) {
-      console.log(res);
+			$('body').snackbar({
+				alive: 5 * 1000,
+				content: 'Scanned: ' + res
+			});
+
       if (res.match(/^https?:\/\//i)) {
         var win = window.open(res, '_blank');
         win.focus();
-      }
+			}
     };
     scanner.start();
   </script>

@@ -12,9 +12,12 @@ function CameraQrScanner(previewContainer) {
     audio: false,
     video: {
       mandatory: {
-        minWidth: 1920,
-        minHeight: 1080
-      }
+        minAspectRatio: 1.6,
+        maxAspectRatio: 1.9,
+      //  minWidth: 1920,
+        //minHeight: 1080
+      },
+      optional: []
     }
   };
 
