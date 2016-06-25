@@ -21,7 +21,7 @@ function CameraQrScanner(previewContainer) {
     }
   };
 
-  this.onresult = function () { };
+  this.onResult = function () { };
 
   this.start = function () {
     navigator.webkitGetUserMedia(constraints, function (stream) {
@@ -100,7 +100,7 @@ function CameraQrScanner(previewContainer) {
       var result = window.zxDecodeResult;
       if (lastResult != result) {
         lastResult = result;
-        self.onresult(result);
+        self.onResult(result);
       }
     }
   }
