@@ -28,14 +28,14 @@ var app = new Vue({
       var scanner = new CameraQrScanner(document.querySelector('#camera'));
       scanner.onResult = this.onScanResult;
 
-      if (!self.activeCamera) {
-        scanner.getCameras(function (cameras) {
-          self.cameras = cameras;
+      scanner.getCameras(function (cameras) {
+        self.cameras = cameras;
+        if (!self.activeCamera) {
           self.activeCamera = cameras[0].id;
-        });
-      } else {
-        scanner.start(self.activeCamera);
-      }
+        } else {
+          scanner.start(self.activeCamera);
+        }
+      });
 
       this.$watch('activeCamera', function (camera) {
         self.store.set('active-camera', camera);
