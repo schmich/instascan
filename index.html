@@ -8,6 +8,7 @@
   <script type="text/javascript" src="qr.js"></script>
   <script type="text/javascript" src="material.min.js"></script>
   <script type="text/javascript" src="clipboard.min.js"></script>
+  <script type="text/javascript" src="store.min.js"></script>
   <script type="text/javascript" src="vue.js"></script>
 </head>
 <body id="app">
@@ -80,19 +81,19 @@
 							<div class="form-group">
 								<div class="radiobtn radiobtn-adv">
 									<label for="link-ignore">
-										<input class="access-hide" id="link-ignore" name="link" type="radio" value="ignore" v-model="links">Do nothing
+										<input class="access-hide" id="link-ignore" name="link" type="radio" value="ignore" v-model="linkAction">Do nothing
 										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
 									</label>
 								</div>
 								<div class="radiobtn radiobtn-adv">
 									<label for="link-new-tab">
-										<input class="access-hide" id="link-new-tab" name="link" type="radio" value="new-tab" v-model="links">Open in new tab
+										<input class="access-hide" id="link-new-tab" name="link" type="radio" value="new-tab" v-model="linkAction">Open in new tab
 										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
 									</label>
 								</div>
 								<div class="radiobtn radiobtn-adv">
 									<label for="link-current-tab">
-										<input class="access-hide" id="link-current-tab" name="link" type="radio" value="current-tab" v-model="links">Open in current tab
+										<input class="access-hide" id="link-current-tab" name="link" type="radio" value="current-tab" v-model="linkAction">Open in current tab
 										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
 									</label>
 								</div>

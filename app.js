@@ -13,12 +13,13 @@ function escapeHtml(text) {
 var app = new Vue({
   el: '#app',
   data: {
-    scans: [],
-    links: 'ignore',
+    store: store,
     cameras: [],
-    activeCamera: null,
-    playAudio: false,
-    scanAudio: null
+    scanAudio: null,
+    scans: store.get('scans') || [],
+    linkAction: store.get('link-action') || 'ignore',
+    activeCamera: store.get('active-camera') || null,
+    playAudio: store.get('play-audio') || false
   },
   methods: {
     start: function () {
@@ -27,14 +28,31 @@ var app = new Vue({
       var scanner = new CameraQrScanner(document.querySelector('#camera'));
       scanner.onResult = this.onScanResult;
 
-      scanner.getCameras(function (cameras) {
-        self.cameras = cameras;
-        self.activeCamera = cameras[0].id;
-      });
+      if (!self.activeCamera) {
+        scanner.getCameras(function (cameras) {
+          self.cameras = cameras;
+          self.activeCamera = cameras[0].id;
+        });
+      } else {
+        scanner.start(self.activeCamera);
+      }
 
       this.$watch('activeCamera', function (camera) {
+        self.store.set('active-camera', camera);
         scanner.start(camera);
       });
+
+      this.$watch('playAudio', function (play) {
+        self.store.set('play-audio', play);
+      });
+
+      this.$watch('linkAction', function (linkAction) {
+        self.store.set('link-action', linkAction);
+      });
+
+      this.$watch('scans', function (scans) {
+        self.store.set('scans', scans);
+      }, { deep: true });
 
       new Clipboard('.clipboard-copy', {
         text: function (trigger) {
@@ -84,11 +102,11 @@ var app = new Vue({
 
       this.addScan(content);
 
-      if (this.links !== 'ignore' && isHttpUrl) {
-        if (this.links === 'new-tab') {
+      if (this.linkAction !== 'ignore' && isHttpUrl) {
+        if (this.linkAction === 'new-tab') {
           var win = window.open(content, '_blank');
           win.focus();
-        } else if (this.links === 'current-tab') {
+        } else if (this.linkAction === 'current-tab') {
           window.location = content;
         }
       }
