@@ -10,13 +10,31 @@
   <script type="text/javascript" src="clipboard.min.js"></script>
   <script type="text/javascript" src="store.min.js"></script>
   <script type="text/javascript" src="visibility.min.js"></script>
+  <script type="text/javascript" src="FileSaver.min.js"></script>
   <script type="text/javascript" src="vue.js"></script>
 </head>
 <body id="app">
   <nav class="menu" id="history-menu">
 		<div class="menu-scroll">
 			<div class="menu-content">
-				<span class="menu-logo">History</span>
+				<div class="menu-logo">
+          <div class="title">History</div>
+          <div class="fbtn-inner">
+            <a class="fbtn fbtn-md waves-attach waves-circle" data-toggle="dropdown">
+              <span class="icon icon-lg">more_horiz</span>
+            </a>
+            <div class="fbtn-dropdown">
+              <a v-on:click="downloadHistory()" class="fbtn fbtn-brand waves-attach waves-circle" href="javascript:void(0)">
+                <span class="fbtn-text fbtn-text-left">Download as JSON</span>
+                <span class="icon icon-lg">file_download</span>
+              </a>
+              <a v-on:click="clearHistory()" class="fbtn fbtn-red waves-attach waves-circle" href="javascript:void(0)">
+                <span class="fbtn-text fbtn-text-left">Clear History</span>
+                <span class="icon icon-lg">delete</span>
+              </a>
+            </div>
+          </div>
+        </div>
         <div class="container" v-if="!scans.length">
           <p>You haven't scanned anything yet</p>
         </div>

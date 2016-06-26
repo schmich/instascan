@@ -86,6 +86,16 @@ var app = new Vue({
       });
     },
 
+    clearHistory: function () {
+      this.scans = [];
+    },
+
+    downloadHistory: function () {
+      var content = JSON.stringify(this.scans, null, '  ');
+      var blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+      saveAs(blob, "instascan.json");
+    },
+
     isHttpUrl: function (string) {
       return string.match(/^https?:\/\//i);
     },

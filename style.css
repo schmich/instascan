@@ -21,7 +21,7 @@ video {
   position: relative;
 }
 #history-menu, #settings-menu {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 #menu-button {
   top: 10px;
@@ -40,6 +40,24 @@ video {
   bottom: 10px;
   left: 20px;
   z-index: 2;
+}
+#history-menu .menu-logo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+#history-menu .tile-wrap {
+  margin-top: 0;
+  padding-top: 0;
+}
+#history-menu .tile {
+  box-shadow: none;
+  border-bottom: 1px solid #eee;
+}
+#history-menu p {
+  margin: 40px 0;
+  text-align: center;
 }
 .menu-logo {
   font-weight: 400;
