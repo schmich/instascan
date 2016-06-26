@@ -19,7 +19,8 @@ var app = new Vue({
     scans: store.get('scans') || [],
     linkAction: store.get('link-action') || 'ignore',
     activeCamera: store.get('active-camera') || null,
-    playAudio: store.get('play-audio') || false
+    playAudio: store.get('play-audio') || false,
+    allowBackgroundScan: store.get('background-scan') || false
   },
   methods: {
     start: function () {
@@ -57,6 +58,10 @@ var app = new Vue({
         self.store.set('scans', scans);
       }, { deep: true });
 
+      this.$watch('allowBackgroundScan', function (allowBackgroundScan) {
+        self.store.set('background-scan', allowBackgroundScan);
+      });
+
       new Clipboard('.clipboard-copy', {
         text: function (trigger) {
           return trigger.dataset.clipboard;
@@ -64,6 +69,10 @@ var app = new Vue({
       });
 
       Visibility.change(function (e, state) {
+        if (self.allowBackgroundScan) {
+          return;
+        }
+
         if (state === 'visible') {
           scanner.start(self.activeCamera);
         } else {
