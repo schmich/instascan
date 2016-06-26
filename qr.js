@@ -111,8 +111,8 @@ function CameraQrScanner(previewContainer) {
       var videoWidth = cameraElement.videoWidth;
       var videoHeight = cameraElement.videoHeight;
 
-      sensorWidth = 750;
-      sensorHeight = 750;
+      sensorWidth = videoWidth;
+      sensorHeight = videoHeight;
       sensorLeft = Math.floor((videoWidth / 2) - (sensorWidth / 2));
       sensorTop = Math.floor((videoHeight / 2) - (sensorHeight / 2));
       canvas.width = sensorWidth;
@@ -128,7 +128,6 @@ function CameraQrScanner(previewContainer) {
 
     for (var i = 0, j = 0; i < data.length; i += 4, j++) {
       ZXing.HEAPU8[image + j] = data[i];
-      //ZXing.HEAPU8[image + j] = 0.2989 * data[i + 0] + 0.5870 * data[i + 1] + 0.1140 * data[i + 2] ;
     }
 
     var err = ZXing._decode_qr_multi(decodeCallback);
