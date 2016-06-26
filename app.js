@@ -63,6 +63,14 @@ var app = new Vue({
         }
       });
 
+      Visibility.change(function (e, state) {
+        if (state === 'visible') {
+          scanner.start(self.activeCamera);
+        } else {
+          scanner.stop();
+        }
+      });
+
       var audioElem = $('<audio>').attr('src', 'scan.mp3').attr('preload', 'auto');
       this.chime = audioElem[0];
     },

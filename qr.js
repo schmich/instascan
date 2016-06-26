@@ -24,13 +24,7 @@ function CameraQrScanner(previewContainer) {
   };
 
   this.start = function (cameraId) {
-    if (this.stream) {
-      for (let stream of this.stream.getVideoTracks()) {
-        stream.stop();
-      }
-
-      this.stream = null;
-    }
+    this.stop();
 
     var constraints = {
       audio: false,
@@ -56,8 +50,21 @@ function CameraQrScanner(previewContainer) {
     });
   };
 
+  this.stop = function () {
+    this.scanActive = false;
+
+    if (this.stream) {
+      for (let stream of this.stream.getVideoTracks()) {
+        stream.stop();
+      }
+
+      this.stream = null;
+    }
+  };
+
   var image;
   var context;
+  var scanActive = false;
 
   var sensorLeft;
   var sensorTop;
@@ -78,14 +85,19 @@ function CameraQrScanner(previewContainer) {
   });
 
   function startScan() {
+    this.scanActive = true;
     requestAnimationFrame(scan);
   }
 
   var frameCount = 0;
   function scan() {
+    if (!this.scanActive) {
+      return;
+    }
+
     requestAnimationFrame(scan);
 
-    if (++frameCount != 5) {
+    if (++frameCount !== 5) {
       return;
     } else {
       frameCount = 0;
