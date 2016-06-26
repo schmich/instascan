@@ -41,6 +41,9 @@ video {
   left: 20px;
   z-index: 2;
 }
+.menu-logo {
+  font-weight: 400;
+}
 .snackbar {
   display: flex;
   justify-content: center;
