@@ -78,8 +78,12 @@ var app = new Vue({
       });
     },
 
+    isHttpUrl: function (string) {
+      return string.match(/^https?:\/\//i);
+    },
+
     onScanResult: function (content) {
-      var isHttpUrl = content.match(/^https?:\/\//i);
+      var isHttpUrl = this.isHttpUrl(content);
 
       var snackbarContent = 'Scanned: '
         + content
@@ -91,7 +95,7 @@ var app = new Vue({
         snackbarContent += '<a href="'
           + escapeHtml(content)
           + '" target="_blank" data-dismiss="snackbar">'
-          + '<span class="icon icon-md">open_in_new</span> Open</a>';
+          + '<span class="icon icon-md">call_made</span> Open</a>';
       }
 
       if (this.playAudio) {
