@@ -44,11 +44,6 @@
 						</div>
 						<div class="tile-action">
 							<ul class="nav nav-list margin-no pull-right">
-								<li v-if="isHttpUrl(scan.content)">
-									<a class="text-black-sec waves-attach waves-effect" href="{{ scan.content }}" target="_blank">
-                    <span class="icon icon-md">call_made</span>
-                  </a>
-								</li>
 								<li>
 									<a class="text-black-sec waves-attach waves-effect clipboard-copy" href="#" data-clipboard="{{ scan.content }}">
                     <span class="icon icon-md">content_copy</span>
@@ -62,7 +57,8 @@
 							</ul>
 						</div>
 						<div class="tile-inner">
-							<span class="text-overflow">{{ scan.content }}</span>
+							<a v-if="isHttpUrl(scan.content)" href="{{scan.content}}" target="_blank" class="text-overflow">{{ scan.content }}</a>
+  						<span v-else class="text-overflow">{{ scan.content }}</span>
 						</div>
 					</div>
         </div>
