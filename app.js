@@ -15,7 +15,7 @@ var app = new Vue({
   data: {
     store: store,
     cameras: [],
-    scanAudio: null,
+    chime: null,
     scans: store.get('scans') || [],
     linkAction: store.get('link-action') || 'ignore',
     activeCamera: store.get('active-camera') || null,
@@ -44,6 +44,9 @@ var app = new Vue({
 
       this.$watch('playAudio', function (play) {
         self.store.set('play-audio', play);
+        if (play) {
+          this.chime.play();
+        }
       });
 
       this.$watch('linkAction', function (linkAction) {
@@ -61,7 +64,7 @@ var app = new Vue({
       });
 
       var audioElem = $('<audio>').attr('src', 'scan.mp3').attr('preload', 'auto');
-      this.scanAudio = audioElem[0];
+      this.chime = audioElem[0];
     },
 
     deleteScan: function(scan) {
@@ -92,7 +95,7 @@ var app = new Vue({
       }
 
       if (this.playAudio) {
-        this.scanAudio.play();
+        this.chime.play();
       }
 
       $('body').snackbar({
