@@ -131,7 +131,7 @@ function CameraQrScanner(previewContainer) {
     }
 
     var err = ZXing._decode_qr_multi(decodeCallback);
-    if (!err) {
+    if (err) {
       return;
     }
 
