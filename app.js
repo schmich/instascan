@@ -16,7 +16,12 @@ var app = new Vue({
     store: store,
     cameras: [],
     chime: null,
+    currentTransform: {
+      pattern: '',
+      output: ''
+    },
     scans: store.get('scans') || [],
+    transforms: store.get('transforms') || [],
     linkAction: store.get('link-action') || 'ignore',
     activeCamera: store.get('active-camera') || null,
     playAudio: store.get('play-audio') || false,
@@ -58,6 +63,10 @@ var app = new Vue({
         self.store.set('scans', scans);
       }, { deep: true });
 
+      this.$watch('transforms', function (transforms) {
+        self.store.set('transforms', transforms);
+      }, { deep: true });
+
       this.$watch('allowBackgroundScan', function (allowBackgroundScan) {
         self.store.set('background-scan', allowBackgroundScan);
       });
@@ -84,8 +93,50 @@ var app = new Vue({
       this.chime = audioElem[0];
     },
 
-    deleteScan: function(scan) {
-      this.scans = this.scans.filter(s => s.date !== scan.date);
+    transform: function (content) {
+      try {
+        for (let transform of this.transforms) {
+          if (!transform.enabled) {
+            continue;
+          }
+
+          var pattern = new RegExp(transform.pattern, 'ig');
+          var match = content.match(pattern);
+          if (!match) {
+            continue;
+          }
+
+          return content.replace(pattern, transform.output);
+        }
+      } catch (e) {
+        return content;
+      }
+
+      return content;
+    },
+
+    showTransformDialog: function (pattern, output) {
+      this.currentTransform = {
+        pattern: pattern,
+        output: output
+      };
+    },
+
+    addTransform: function () {
+      this.transforms.push({
+        pattern: this.currentTransform.pattern,
+        output: this.currentTransform.output,
+        enabled: true
+      });
+
+      this.currentTransform = {
+        pattern: '',
+        output: ''
+      };
+    },
+
+    deleteTransform: function (index) {
+      this.transforms.splice(index, 1);
     },
 
     addScan: function (content) {
@@ -93,6 +144,10 @@ var app = new Vue({
         content: content,
         date: +(new Date())
       });
+    },
+
+    deleteScan: function (scan) {
+      this.scans = this.scans.filter(s => s.date !== scan.date);
     },
 
     clearHistory: function () {
@@ -111,6 +166,8 @@ var app = new Vue({
 
     onScanResult: function (content) {
       var isHttpUrl = this.isHttpUrl(content);
+
+      content = this.transform(content);
 
       var snackbarContent = 'Scanned: '
         + content

@@ -1,4 +1,4 @@
-<html>
+              <html>
 <head>
 	<title>Instascan &ndash; QR Code Scanner</title>
 	<link href="material.min.css" rel="stylesheet">
@@ -24,11 +24,11 @@
               <span class="icon icon-lg">more_horiz</span>
             </a>
             <div class="fbtn-dropdown">
-              <a v-on:click="downloadHistory()" class="fbtn fbtn-brand waves-attach waves-circle" href="javascript:void(0)">
+              <a @click="downloadHistory()" class="fbtn fbtn-brand waves-attach waves-circle" href="#">
                 <span class="fbtn-text fbtn-text-left">Download as JSON</span>
                 <span class="icon icon-lg">file_download</span>
               </a>
-              <a v-on:click="clearHistory()" class="fbtn fbtn-red waves-attach waves-circle" href="javascript:void(0)">
+              <a @click="clearHistory()" class="fbtn fbtn-red waves-attach waves-circle" href="#">
                 <span class="fbtn-text fbtn-text-left">Clear History</span>
                 <span class="icon icon-lg">delete</span>
               </a>
@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="container" v-if="!scans.length">
-          <p>You haven't scanned anything yet</p>
+          <p>No scan history</p>
         </div>
         <div class="tile-wrap">
 					<div v-for="scan in scans | orderBy 'date' -1" class="tile">
@@ -48,7 +48,7 @@
                   </a>
 								</li>
 								<li>
-									<a class="text-black-sec waves-attach waves-effect" href="#" v-on:click="deleteScan(scan)">
+									<a class="text-black-sec waves-attach waves-effect" href="#" @click="deleteScan(scan)">
                     <span class="icon icon-md">clear</span>
                   </a>
 								</li>
@@ -130,10 +130,83 @@
 							</div>
 						</fieldset>
 					</form>
-				</div>
+          <h4>Transforms</h4>
+          <form>
+            <fieldset>
+              <div class="tile-wrap">
+                <div class="tile">
+                  <div class="tile-inner">
+                    <a data-backdrop="static" data-toggle="modal" href="#transform-dialog" @click="showTransformDialog('', '')">Add a transform</a>
+                  </div>
+                </div>
+                <div v-if="!transforms.length" class="tile">
+                  <div class="tile-inner">
+                    No transforms defined
+                  </div>
+                </div>
+                <div v-for="transform in transforms" class="tile transform-tile">
+                  <div class="tile-action">
+                    <ul class="nav nav-list margin-no pull-right">
+                      <li>
+                        <a data-backdrop="static" data-toggle="modal" href="#transform-dialog" class="text-black-sec waves-attach waves-effect" @click="showTransformDialog(transform.pattern, transform.output)">
+                          <span class="icon icon-md">mode_edit</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a class="text-black-sec waves-attach waves-effect" href="#" @click="deleteTransform($index)">
+                          <span class="icon icon-md">clear</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="tile-inner">
+                    <div class="checkbox checkbox-adv">
+											<label for="transform-{{$index}}">
+												<input class="access-hide" id="transform-{{$index}}" name="transform-{{$index}}" type="checkbox" v-model="transform.enabled"><span class="text-overflow">/{{ transform.pattern }}/ → {{ transform.output }}</span>
+												<span class="checkbox-circle"></span><span class="checkbox-circle-check"></span><span class="checkbox-circle-icon icon">done</span>
+											</label>
+										</div>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
 			</div>
 		</div>
 	</nav>
+  <div aria-hidden="true" class="modal modal-va-middle fade" id="transform-dialog" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-xs">
+      <div class="modal-content">
+        <div class="modal-heading">
+          <p class="modal-title">Add a Transform</p>
+        </div>
+        <div class="modal-inner">
+          <form>
+            <fieldset>
+              <p>Transforms allow you to change the content of the scan before further processing by using JavaScript's <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace" target="_blank">String.replace</a>.</p>
+              <p>The input pattern is any valid <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">JavaScript regular expression</a>. Delimiters, i.e. leading and trailing <span class="code">/</span>, are not needed.</p>
+              <p>The output can use <span class="code">$&amp;</span> for the entire matched expression, <span class="code">$1</span> for the first capture group, <span class="code">$2</span> for the second capture group, etc.</p>
+              <div class="form-group form-group-label">
+                <label class="floating-label" for="pattern">Input pattern (regular expression)</label>
+                <input class="form-control" id="pattern" type="text" value=" " v-model="currentTransform.pattern">
+              </div>
+              <div class="form-group form-group-label">
+                <label class="floating-label" for="output">Output transformation</label>
+                <input class="form-control" id="output" type="text" value=" " v-model="currentTransform.output">
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <p class="text-right">
+            <a class="btn btn-flat btn-brand-accent waves-attach" data-dismiss="modal">Cancel</a>
+            <a @click="addTransform()" class="btn btn-flat btn-brand-accent waves-attach" data-dismiss="modal">OK</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="overlay">
     <a id="menu-button" class="fbtn fbtn-brand fbtn-lg waves-attach waves-circle" data-toggle="menu" href="#history-menu">
       <span class="icon icon-lg">history</span>

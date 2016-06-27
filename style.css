@@ -47,17 +47,45 @@ video {
   margin-bottom: 0;
   padding-bottom: 0;
 }
-#history-menu .tile-wrap {
-  margin-top: 0;
-  padding-top: 0;
-}
-#history-menu .tile {
-  box-shadow: none;
-  border-bottom: 1px solid #eee;
-}
 #history-menu p {
   margin: 40px 0;
   text-align: center;
+}
+#settings-menu h4 {
+  margin-top: 0;
+}
+#settings-menu form {
+  margin-bottom: 0;
+}
+#settings-menu .menu-logo {
+  margin-bottom: 30px;
+}
+#transform-dialog input {
+  font-family: Consolas, Monaco, monospace;
+  font-size: 16px;
+}
+.code {
+  font-family: Consolas, Monaco, monospace;
+}
+.transform-tile {
+  font-family: Consolas, Monaco, monospace;
+}
+.menu .tile-wrap {
+  margin-top: 10px;
+  padding-top: 0;
+}
+.menu .tile {
+  box-shadow: none;
+  border-bottom: 1px solid #eee;
+}
+.header-add h4, .header-add a {
+  display: inline-block;
+}
+.header-add {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 .menu-logo {
   font-weight: 400;
