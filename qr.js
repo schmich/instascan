@@ -132,18 +132,20 @@ function CameraQrScanner(previewContainer) {
 
     var err = ZXing._decode_qr_multi(decodeCallback);
     if (!err) {
-      var result = window.zxDecodeResult;
-      if ((result !== null) && (result !== self.lastResult)) {
-        clearTimeout(self.refractoryTimeout);
-        self.refractoryTimeout = setTimeout(function () {
-          self.lastResult = null;
-        }, 5 * 1000);
+      return;
+    }
 
-        self.lastResult = result;
-        setTimeout(function () {
-          self.onResult(result);
-        }, 0);
-      }
+    var result = window.zxDecodeResult;
+    if ((result != null) && (result !== self.lastResult)) {
+      clearTimeout(self.refractoryTimeout);
+      self.refractoryTimeout = setTimeout(function () {
+        self.lastResult = null;
+      }, 5 * 1000);
+
+      self.lastResult = result;
+      setTimeout(function () {
+        self.onResult(result);
+      }, 0);
     }
   }
 }
