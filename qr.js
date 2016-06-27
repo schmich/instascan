@@ -130,7 +130,7 @@ function CameraQrScanner(previewContainer) {
       ZXing.HEAPU8[image + j] = data[i];
     }
 
-    var err = ZXing._decode_qr_multi(decodeCallback);
+    var err = ZXing._decode_qr(decodeCallback);
     if (err) {
       return;
     }
