@@ -2,6 +2,9 @@ function CameraQrScanner(previewContainer) {
   var self = this;
 
   this.stream = null;
+  this.scanActive = false;
+  this.lastResult = null;
+  this.refractoryTimeout = null;
 
   var cameraElement = document.createElement('video');
   cameraElement.setAttribute('autoplay', 'autoplay');
@@ -64,14 +67,11 @@ function CameraQrScanner(previewContainer) {
 
   var image;
   var context;
-  var scanActive = false;
 
   var sensorLeft;
   var sensorTop;
   var sensorWidth;
   var sensorHeight;
-
-  var lastResult = null;
 
   var ZXing = window.ZXing();
 
@@ -133,9 +133,16 @@ function CameraQrScanner(previewContainer) {
     var err = ZXing._decode_qr_multi(decodeCallback);
     if (!err) {
       var result = window.zxDecodeResult;
-      if (lastResult != result) {
-        lastResult = result;
-        self.onResult(result);
+      if ((result !== null) && (result !== self.lastResult)) {
+        clearTimeout(self.refractoryTimeout);
+        self.refractoryTimeout = setTimeout(function () {
+          self.lastResult = null;
+        }, 5 * 1000);
+
+        self.lastResult = result;
+        setTimeout(function () {
+          self.onResult(result);
+        }, 0);
       }
     }
   }
