@@ -24,11 +24,11 @@
               <span class="icon icon-lg">more_horiz</span>
             </a>
             <div class="fbtn-dropdown">
-              <a @click="downloadHistory()" class="fbtn fbtn-brand waves-attach waves-circle" href="#">
+              <a @click="downloadHistory()" class="fbtn fbtn-brand waves-attach waves-circle">
                 <span class="fbtn-text fbtn-text-left">Download as JSON</span>
                 <span class="icon icon-lg">file_download</span>
               </a>
-              <a @click="clearHistory()" class="fbtn fbtn-red waves-attach waves-circle" href="#">
+              <a @click="clearHistory()" class="fbtn fbtn-red waves-attach waves-circle">
                 <span class="fbtn-text fbtn-text-left">Clear History</span>
                 <span class="icon icon-lg">delete</span>
               </a>
@@ -43,12 +43,12 @@
 						<div class="tile-action">
 							<ul class="nav nav-list margin-no pull-right">
 								<li>
-									<a class="text-black-sec waves-attach waves-effect clipboard-copy" href="#" data-clipboard="{{ scan.content }}">
+									<a class="text-black-sec waves-attach waves-effect clipboard-copy" data-clipboard="{{ scan.content }}">
                     <span class="icon icon-md">content_copy</span>
                   </a>
 								</li>
 								<li>
-									<a class="text-black-sec waves-attach waves-effect" href="#" @click="deleteScan(scan)">
+									<a class="text-black-sec waves-attach waves-effect" @click="deleteScan(scan)">
                     <span class="icon icon-md">clear</span>
                   </a>
 								</li>
@@ -153,7 +153,7 @@
                         </a>
                       </li>
                       <li>
-                        <a class="text-black-sec waves-attach waves-effect" href="#" @click="deleteTransform($index)">
+                        <a class="text-black-sec waves-attach waves-effect" @click="deleteTransform($index)">
                           <span class="icon icon-md">clear</span>
                         </a>
                       </li>
