@@ -55,7 +55,9 @@
 							</ul>
 						</div>
 						<div class="tile-inner">
-							<a v-if="isHttpUrl(scan.content)" href="{{scan.content}}" target="_blank" class="text-overflow">{{ scan.content }}</a>
+							<a v-if="isHttpUrl(scan.content)" href="{{scan.content}}" target="_blank" class="text-overflow">
+                {{ scan.content }}
+              </a>
   						<span v-else class="text-overflow">{{ scan.content }}</span>
 						</div>
 					</div>
@@ -74,7 +76,8 @@
 							<div class="form-group">
 								<div v-for="camera in cameras" class="radiobtn radiobtn-adv">
 									<label for="camera-{{$index}}">
-										<input class="access-hide" id="camera-{{$index}}" name="activeCamera" type="radio" v-bind:value="camera.id" v-model="activeCamera">{{ camera.name }}
+										<input class="access-hide" id="camera-{{$index}}" name="activeCamera" type="radio" v-bind:value="camera.id" v-model="activeCamera">
+                    {{ camera.name }}
 										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
 									</label>
 								</div>
@@ -87,7 +90,8 @@
 							<div class="form-group">
 								<div class="checkbox switch">
 									<label for="play-audio">
-										<input class="access-hide" id="play-audio" name="play-audio" type="checkbox" v-model="playAudio"><span class="switch-toggle"></span>Play a sound
+										<input class="access-hide" id="play-audio" name="play-audio" type="checkbox" v-model="playAudio"><span class="switch-toggle"></span>
+                    Play a sound
 									</label>
 								</div>
 							</div>
@@ -99,19 +103,22 @@
 							<div class="form-group">
 								<div class="radiobtn radiobtn-adv">
 									<label for="link-ignore">
-										<input class="access-hide" id="link-ignore" name="link" type="radio" value="ignore" v-model="linkAction">Do nothing
+										<input class="access-hide" id="link-ignore" name="link" type="radio" value="ignore" v-model="linkAction">
+                    Do nothing
 										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
 									</label>
 								</div>
 								<div class="radiobtn radiobtn-adv">
 									<label for="link-new-tab">
-										<input class="access-hide" id="link-new-tab" name="link" type="radio" value="new-tab" v-model="linkAction">Open in new tab
+										<input class="access-hide" id="link-new-tab" name="link" type="radio" value="new-tab" v-model="linkAction">
+                    Open in new tab
 										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
 									</label>
 								</div>
 								<div class="radiobtn radiobtn-adv">
 									<label for="link-current-tab">
-										<input class="access-hide" id="link-current-tab" name="link" type="radio" value="current-tab" v-model="linkAction">Open in current tab
+										<input class="access-hide" id="link-current-tab" name="link" type="radio" value="current-tab" v-model="linkAction">
+                    Open in current tab
 										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
 									</label>
 								</div>
@@ -124,7 +131,8 @@
 							<div class="form-group">
 								<div class="checkbox switch">
 									<label for="background-scan">
-										<input class="access-hide" id="background-scan" name="background-scan" type="checkbox" v-model="allowBackgroundScan"><span class="switch-toggle"></span> Scan even when tab is not focused
+										<input class="access-hide" id="background-scan" name="background-scan" type="checkbox" v-model="allowBackgroundScan"><span class="switch-toggle"></span>
+                    Scan even when tab is not focused
 									</label>
 								</div>
 							</div>
@@ -136,7 +144,9 @@
               <div class="tile-wrap">
                 <div class="tile">
                   <div class="tile-inner">
-                    <a data-backdrop="static" data-toggle="modal" href="#transform-dialog" @click="showTransformDialog('', '')">Add a transform</a>
+                    <a data-backdrop="static" data-toggle="modal" href="#transform-dialog" @click="showTransformDialog('', '')">
+                      Add a transform
+                    </a>
                   </div>
                 </div>
                 <div v-if="!transforms.length" class="tile">
@@ -162,7 +172,9 @@
                   <div class="tile-inner">
                     <div class="checkbox checkbox-adv">
 											<label for="transform-{{$index}}">
-												<input class="access-hide" id="transform-{{$index}}" name="transform-{{$index}}" type="checkbox" v-model="transform.enabled"><span class="text-overflow">/{{ transform.pattern }}/ → {{ transform.output }}</span>
+												<input class="access-hide" id="transform-{{$index}}" name="transform-{{$index}}" type="checkbox" v-model="transform.enabled"><span class="text-overflow">
+                          /{{ transform.pattern }}/ → {{ transform.output }}
+                        </span>
 												<span class="checkbox-circle"></span><span class="checkbox-circle-check"></span><span class="checkbox-circle-icon icon">done</span>
 											</label>
 										</div>
