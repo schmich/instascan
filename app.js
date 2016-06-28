@@ -165,9 +165,9 @@ var app = new Vue({
     },
 
     onScanResult: function (content) {
-      var isHttpUrl = this.isHttpUrl(content);
-
       content = this.transform(content);
+
+      var isHttpUrl = this.isHttpUrl(content);
 
       var snackbarContent = 'Scanned: '
         + content
