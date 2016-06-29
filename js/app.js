@@ -103,7 +103,9 @@ var app = new Vue({
         }
 
         if (state === 'visible') {
-          scanner.start(self.activeCamera);
+          setTimeout(function () {
+            scanner.start(self.activeCamera);
+          }, 0);
         } else {
           scanner.stop();
         }

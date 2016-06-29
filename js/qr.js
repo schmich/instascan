@@ -57,6 +57,7 @@ function CameraQrScanner(previewContainer) {
 
   this.stop = function () {
     this.scanActive = false;
+    cameraElement.src = null;
 
     if (this.stream) {
       for (let stream of this.stream.getVideoTracks()) {
@@ -146,7 +147,7 @@ function CameraQrScanner(previewContainer) {
       clearTimeout(self.refractoryTimeout);
       self.refractoryTimeout = setTimeout(function () {
         self.lastResult = null;
-      }, 5 * 1000);
+      }, 6 * 1000);
 
       var image = self.captureImage ? canvas.toDataURL('image/webp', 0.8) : null;
 
