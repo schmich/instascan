@@ -57,7 +57,7 @@ function CameraQrScanner(previewContainer) {
 
   this.stop = function () {
     this.scanActive = false;
-    cameraElement.src = null;
+    cameraElement.src = '';
 
     if (this.stream) {
       for (let stream of this.stream.getVideoTracks()) {
