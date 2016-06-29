@@ -1,8 +1,8 @@
-              <html>
+<html>
 <head>
-	<title>Instascan &ndash; QR Code Scanner</title>
-	<link href="css/material.min.css" rel="stylesheet">
-	<link href="css/style.css" rel="stylesheet">
+  <title>Instascan &ndash; QR Code Scanner</title>
+  <link href="css/material.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
   <script type="text/javascript" src="js/jquery-3.0.0.min.js"></script>
   <script type="text/javascript" src="js/zxing.js"></script>
   <script type="text/javascript" src="js/qr.js"></script>
@@ -15,9 +15,9 @@
 </head>
 <body id="app">
   <nav class="menu" id="history-menu">
-		<div class="menu-scroll">
-			<div class="menu-content">
-				<div class="menu-logo">
+    <div class="menu-scroll">
+      <div class="menu-content">
+        <div class="menu-logo">
           <div class="title">History</div>
           <div class="fbtn-inner">
             <a class="fbtn fbtn-md waves-attach waves-circle" data-toggle="dropdown">
@@ -39,112 +39,112 @@
           <p>No scan history</p>
         </div>
         <div class="tile-wrap">
-					<div v-for="scan in scans | orderBy 'date' -1" class="tile">
-						<div class="tile-action">
-							<ul class="nav nav-list margin-no pull-right">
-								<li>
-									<a class="text-black-sec waves-attach waves-effect clipboard-copy" data-clipboard="{{ scan.content }}">
+          <div v-for="scan in scans | orderBy 'date' -1" class="tile">
+            <div class="tile-action">
+              <ul class="nav nav-list margin-no pull-right">
+                <li>
+                  <a class="text-black-sec waves-attach waves-effect clipboard-copy" data-clipboard="{{ scan.content }}">
                     <span class="icon icon-md">content_copy</span>
                   </a>
-								</li>
-								<li>
-									<a class="text-black-sec waves-attach waves-effect" @click="deleteScan(scan)">
+                </li>
+                <li>
+                  <a class="text-black-sec waves-attach waves-effect" @click="deleteScan(scan)">
                     <span class="icon icon-md">clear</span>
                   </a>
-								</li>
-							</ul>
-						</div>
-						<div class="tile-inner">
-							<a v-if="isHttpUrl(scan.content)" href="{{scan.content}}" target="_blank" class="text-overflow">
+                </li>
+              </ul>
+            </div>
+            <div class="tile-inner">
+              <a v-if="isHttpUrl(scan.content)" href="{{scan.content}}" target="_blank" class="text-overflow">
                 {{ scan.content }}
               </a>
-  						<span v-else class="text-overflow">{{ scan.content }}</span>
-						</div>
-					</div>
+              <span v-else class="text-overflow">{{ scan.content }}</span>
+            </div>
+          </div>
         </div>
-			</div>
-		</div>
-	</nav>
+      </div>
+    </div>
+  </nav>
   <nav class="menu menu-right menu-lg" id="settings-menu">
-		<div class="menu-scroll">
-			<div class="menu-content">
-				<span class="menu-logo">Settings</span>
-				<div class="container">
-					<h4>Camera</h4>
-					<form>
-						<fieldset>
-							<div class="form-group">
-								<div v-for="camera in cameras" class="radiobtn radiobtn-adv">
-									<label for="camera-{{$index}}">
-										<input class="access-hide" id="camera-{{$index}}" name="activeCamera" type="radio" v-bind:value="camera.id" v-model="activeCamera">
+    <div class="menu-scroll">
+      <div class="menu-content">
+        <span class="menu-logo">Settings</span>
+        <div class="container">
+          <h4>Camera</h4>
+          <form>
+            <fieldset>
+              <div class="form-group">
+                <div v-for="camera in cameras" class="radiobtn radiobtn-adv">
+                  <label for="camera-{{$index}}">
+                    <input class="access-hide" id="camera-{{$index}}" name="activeCamera" type="radio" v-bind:value="camera.id" v-model="activeCamera">
                     {{ camera.name }}
-										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
-									</label>
-								</div>
-							</div>
-						</fieldset>
-					</form>
-					<h4>After scanning</h4>
-					<form>
-						<fieldset>
-							<div class="form-group">
-								<div class="checkbox switch">
-									<label for="play-audio">
-										<input class="access-hide" id="play-audio" name="play-audio" type="checkbox" v-model="playAudio"><span class="switch-toggle"></span>
+                    <span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+          <h4>After scanning</h4>
+          <form>
+            <fieldset>
+              <div class="form-group">
+                <div class="checkbox switch">
+                  <label for="play-audio">
+                    <input class="access-hide" id="play-audio" name="play-audio" type="checkbox" v-model="playAudio"><span class="switch-toggle"></span>
                     Play a sound
-									</label>
-								</div>
-								<div class="checkbox switch">
-									<label for="http-action">
-										<input class="access-hide" id="http-action" name="http-action" type="checkbox" v-model="httpAction.enabled"><span class="switch-toggle"></span>
+                  </label>
+                </div>
+                <div class="checkbox switch">
+                  <label for="http-action">
+                    <input class="access-hide" id="http-action" name="http-action" type="checkbox" v-model="httpAction.enabled"><span class="switch-toggle"></span>
                     POST to a URL
-									</label>
+                  </label>
                   <span v-if="httpAction.enabled">&ndash; <a @click="editHttpAction()">Edit</a></span>
-								</div>
-							</div>
-						</fieldset>
-					</form>
-					<h4>After scanning a link</h4>
-					<form>
-						<fieldset>
-							<div class="form-group">
-								<div class="radiobtn radiobtn-adv">
-									<label for="link-none">
-										<input class="access-hide" id="link-none" name="link" type="radio" value="none" v-model="linkAction">
+                </div>
+              </div>
+            </fieldset>
+          </form>
+          <h4>After scanning a link</h4>
+          <form>
+            <fieldset>
+              <div class="form-group">
+                <div class="radiobtn radiobtn-adv">
+                  <label for="link-none">
+                    <input class="access-hide" id="link-none" name="link" type="radio" value="none" v-model="linkAction">
                     Do nothing
-										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
-									</label>
-								</div>
-								<div class="radiobtn radiobtn-adv">
-									<label for="link-new-tab">
-										<input class="access-hide" id="link-new-tab" name="link" type="radio" value="new-tab" v-model="linkAction">
+                    <span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
+                  </label>
+                </div>
+                <div class="radiobtn radiobtn-adv">
+                  <label for="link-new-tab">
+                    <input class="access-hide" id="link-new-tab" name="link" type="radio" value="new-tab" v-model="linkAction">
                     Open in new tab
-										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
-									</label>
-								</div>
-								<div class="radiobtn radiobtn-adv">
-									<label for="link-current-tab">
-										<input class="access-hide" id="link-current-tab" name="link" type="radio" value="current-tab" v-model="linkAction">
+                    <span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
+                  </label>
+                </div>
+                <div class="radiobtn radiobtn-adv">
+                  <label for="link-current-tab">
+                    <input class="access-hide" id="link-current-tab" name="link" type="radio" value="current-tab" v-model="linkAction">
                     Open in current tab
-										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
-									</label>
-								</div>
-							</div>
-						</fieldset>
-					</form>
-					<h4>Advanced</h4>
-					<form>
-						<fieldset>
-							<div class="form-group">
-								<div class="checkbox switch">
-									<label for="background-scan">
-										<input class="access-hide" id="background-scan" name="background-scan" type="checkbox" v-model="allowBackgroundScan"><span class="switch-toggle"></span>
+                    <span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+          <h4>Advanced</h4>
+          <form>
+            <fieldset>
+              <div class="form-group">
+                <div class="checkbox switch">
+                  <label for="background-scan">
+                    <input class="access-hide" id="background-scan" name="background-scan" type="checkbox" v-model="allowBackgroundScan"><span class="switch-toggle"></span>
                     Scan even when tab is not focused
-									</label>
-								</div>
-							</div>
-						</fieldset>
-					</form>
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </form>
           <h4>Transforms</h4>
           <form>
             <fieldset>
@@ -178,22 +178,22 @@
                   </div>
                   <div class="tile-inner">
                     <div class="checkbox checkbox-adv">
-											<label for="transform-{{$index}}">
-												<input class="access-hide" id="transform-{{$index}}" name="transform-{{$index}}" type="checkbox" v-model="transform.enabled"><span class="text-overflow">
+                      <label for="transform-{{$index}}">
+                        <input class="access-hide" id="transform-{{$index}}" name="transform-{{$index}}" type="checkbox" v-model="transform.enabled"><span class="text-overflow">
                           /{{ transform.pattern }}/ → {{ transform.output }}
                         </span>
-												<span class="checkbox-circle"></span><span class="checkbox-circle-check"></span><span class="checkbox-circle-icon icon">done</span>
-											</label>
-										</div>
+                        <span class="checkbox-circle"></span><span class="checkbox-circle-check"></span><span class="checkbox-circle-icon icon">done</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
             </fieldset>
           </form>
         </div>
-			</div>
-		</div>
-	</nav>
+      </div>
+    </div>
+  </nav>
   <div aria-hidden="true" class="modal modal-va-middle fade" id="transform-dialog" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-xs">
       <div class="modal-content">
