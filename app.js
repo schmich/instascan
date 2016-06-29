@@ -20,9 +20,15 @@ var app = new Vue({
       pattern: '',
       output: ''
     },
+    currentHttpAction: {
+      url: '',
+      captureImage: false,
+      enabling: false
+    },
     scans: store.get('scans') || [],
     transforms: store.get('transforms') || [],
-    linkAction: store.get('link-action') || 'ignore',
+    linkAction: store.get('link-action') || 'none',
+    httpAction: store.get('http-action') || { enabled: false },
     activeCamera: store.get('active-camera') || null,
     playAudio: store.get('play-audio') || false,
     allowBackgroundScan: store.get('background-scan') || false
@@ -69,6 +75,20 @@ var app = new Vue({
 
       this.$watch('allowBackgroundScan', function (allowBackgroundScan) {
         self.store.set('background-scan', allowBackgroundScan);
+      });
+
+      this.$watch('httpAction', function (action) {
+        self.store.set('http-action', action);
+      }, { deep: true });
+
+      this.$watch('httpAction.captureImage', function (capture) {
+        scanner.setCaptureImage(capture);
+      });
+
+      this.$watch('httpAction.enabled', function (enabled) {
+        if (enabled) {
+          this.editHttpAction(true);
+        }
       });
 
       new Clipboard('.clipboard-copy', {
@@ -139,11 +159,40 @@ var app = new Vue({
       this.transforms.splice(index, 1);
     },
 
+    editHttpAction: function (enabling = false) {
+      this.currentHttpAction.url = this.httpAction.url;
+      this.currentHttpAction.captureImage = this.httpAction.captureImage;
+      this.currentHttpAction.enabling = enabling;
+      $('#http-action-dialog').modal();
+    },
+
+    closeHttpActionDialog: function () {
+      $('#http-action-dialog').modal('hide');
+    },
+
+    cancelHttpActionDialog: function () {
+      if (this.currentHttpAction.enabling) {
+        this.httpAction.enabled = false;
+      }
+
+      this.closeHttpActionDialog();
+    },
+
+    acceptHttpActionDialog: function () {
+      this.httpAction.url = this.currentHttpAction.url;
+      this.httpAction.captureImage = this.currentHttpAction.captureImage;
+      this.closeHttpActionDialog();
+    },
+
     addScan: function (content) {
-      this.scans.push({
+      var scan = {
         content: content,
         date: +(new Date())
-      });
+      };
+
+      this.scans.push(scan);
+
+      return scan;
     },
 
     deleteScan: function (scan) {
@@ -164,10 +213,14 @@ var app = new Vue({
       return string.match(/^https?:\/\//i);
     },
 
-    onScanResult: function (content) {
+    onScanResult: function (content, image) {
       content = this.transform(content);
 
       var isHttpUrl = this.isHttpUrl(content);
+
+      if (this.playAudio) {
+        this.chime.play();
+      }
 
       var snackbarContent = 'Scanned: '
         + content
@@ -182,24 +235,43 @@ var app = new Vue({
           + '<span class="icon icon-md">call_made</span> Open</a>';
       }
 
-      if (this.playAudio) {
-        this.chime.play();
-      }
-
       $('body').snackbar({
         alive: 5 * 1000,
         content: snackbarContent
       });
 
-      this.addScan(content);
+      var scan = this.addScan(content);
 
-      if (this.linkAction !== 'ignore' && isHttpUrl) {
+      if (this.linkAction !== 'none' && isHttpUrl) {
         if (this.linkAction === 'new-tab') {
           var win = window.open(content, '_blank');
           win.focus();
         } else if (this.linkAction === 'current-tab') {
           window.location = content;
         }
+      }
+
+      if (this.httpAction.enabled) {
+        var body = {
+          content: scan.content,
+          date: scan.date
+        };
+
+        if (image) {
+          body.image = image;
+        }
+
+        $.ajax({
+          method: 'POST',
+          url: this.httpAction.url,
+          contentType: 'application/json',
+          data: JSON.stringify(body),
+          processData: false
+        }).done(function () {
+          // TODO.
+        }).fail(function () {
+          // TODO.
+        });
       }
     }
   }

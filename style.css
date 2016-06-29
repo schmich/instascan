@@ -4,6 +4,9 @@ html, body {
   background: #000;
   overflow: hidden;
 }
+a {
+  cursor: pointer !important;
+}
 video {
   margin: 0;
   padding: 0;

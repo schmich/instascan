@@ -94,6 +94,13 @@
                     Play a sound
 									</label>
 								</div>
+								<div class="checkbox switch">
+									<label for="http-action">
+										<input class="access-hide" id="http-action" name="http-action" type="checkbox" v-model="httpAction.enabled"><span class="switch-toggle"></span>
+                    POST to a URL
+									</label>
+                  <span v-if="httpAction.enabled">&ndash; <a @click="editHttpAction()">Edit</a></span>
+								</div>
 							</div>
 						</fieldset>
 					</form>
@@ -102,8 +109,8 @@
 						<fieldset>
 							<div class="form-group">
 								<div class="radiobtn radiobtn-adv">
-									<label for="link-ignore">
-										<input class="access-hide" id="link-ignore" name="link" type="radio" value="ignore" v-model="linkAction">
+									<label for="link-none">
+										<input class="access-hide" id="link-none" name="link" type="radio" value="none" v-model="linkAction">
                     Do nothing
 										<span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
 									</label>
@@ -214,6 +221,40 @@
           <p class="text-right">
             <a class="btn btn-flat btn-brand-accent waves-attach" data-dismiss="modal">Cancel</a>
             <a @click="addTransform()" class="btn btn-flat btn-brand-accent waves-attach" data-dismiss="modal">OK</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div aria-hidden="true" class="modal modal-va-middle fade" id="http-action-dialog" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-xs">
+      <div class="modal-content">
+        <div class="modal-heading">
+          <p class="modal-title">POST Scanned Content to a URL</p>
+        </div>
+        <div class="modal-inner">
+          <form>
+            <fieldset>
+              <p>After scanning, the scanned content and image data will be POSTed to the URL specified below.</p>
+              <p>If the URL is on another domain, it needs to have <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS" target="_blank">CORS enabled</a> to POST from the current domain.</p>
+              <div class="form-group form-group-label">
+                <label class="floating-label" for="url">URL Endpoint</label>
+                <input class="form-control" id="url" type="text" v-model="currentHttpAction.url">
+              </div>
+              <div class="checkbox checkbox-adv">
+                <label for="post-image">
+                  <input class="access-hide" id="post-image" name="post-image" type="checkbox" v-model="currentHttpAction.captureImage">
+                  Include base64-encoded image data in payload
+                  <span class="checkbox-circle"></span><span class="checkbox-circle-check"></span><span class="checkbox-circle-icon icon">done</span>
+                </label>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <p class="text-right">
+            <a class="btn btn-flat btn-brand-accent waves-attach" @click="cancelHttpActionDialog()">Cancel</a>
+            <a class="btn btn-flat btn-brand-accent waves-attach" @click="acceptHttpActionDialog()">OK</a>
           </p>
         </div>
       </div>

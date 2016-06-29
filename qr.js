@@ -5,6 +5,7 @@ function CameraQrScanner(previewContainer) {
   this.scanActive = false;
   this.lastResult = null;
   this.refractoryTimeout = null;
+  this.captureImage = false;
 
   var cameraElement = document.createElement('video');
   cameraElement.setAttribute('autoplay', 'autoplay');
@@ -50,6 +51,7 @@ function CameraQrScanner(previewContainer) {
       cameraElement.src = window.URL.createObjectURL(stream);
       startScan();
     }, function (err) {
+      // TODO.
     });
   };
 
@@ -65,7 +67,11 @@ function CameraQrScanner(previewContainer) {
     }
   };
 
-  var image;
+  this.setCaptureImage = function (captureImage) {
+    this.captureImage = captureImage;
+  };
+
+  this.imageBuffer = null;
   var context;
 
   var sensorLeft;
@@ -107,7 +113,7 @@ function CameraQrScanner(previewContainer) {
       return;
     }
 
-    if (!image) {
+    if (!this.imageBuffer) {
       var videoWidth = cameraElement.videoWidth;
       var videoHeight = cameraElement.videoHeight;
 
@@ -119,7 +125,7 @@ function CameraQrScanner(previewContainer) {
       canvas.height = sensorHeight;
 
       context = canvas.getContext('2d');
-      image = ZXing._resize(sensorWidth, sensorHeight);
+      this.imageBuffer = ZXing._resize(sensorWidth, sensorHeight);
       return;
     }
 
@@ -127,7 +133,7 @@ function CameraQrScanner(previewContainer) {
     var data = context.getImageData(0, 0, sensorWidth, sensorHeight).data;
 
     for (var i = 0, j = 0; i < data.length; i += 4, j++) {
-      ZXing.HEAPU8[image + j] = data[i];
+      ZXing.HEAPU8[this.imageBuffer + j] = data[i];
     }
 
     var err = ZXing._decode_qr(decodeCallback);
@@ -142,9 +148,11 @@ function CameraQrScanner(previewContainer) {
         self.lastResult = null;
       }, 5 * 1000);
 
+      var image = self.captureImage ? canvas.toDataURL('image/webp', 0.8) : null;
+
       self.lastResult = result;
       setTimeout(function () {
-        self.onResult(result);
+        self.onResult(result, image);
       }, 0);
     }
   }
