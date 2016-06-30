@@ -16,10 +16,7 @@ var app = new Vue({
     store: store,
     cameras: [],
     chime: null,
-    currentTransform: {
-      pattern: '',
-      output: ''
-    },
+    currentTransform: { },
     currentHttpAction: { },
     scans: store.get('scans') || [],
     transforms: store.get('transforms') || [],
