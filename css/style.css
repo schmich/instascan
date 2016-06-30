@@ -93,6 +93,10 @@ video {
 .menu-logo {
   font-weight: 400;
 }
+.menu h4 {
+  padding: 0;
+  margin: 20px 0 0 0;
+}
 .snackbar {
   display: flex;
   justify-content: center;
@@ -107,7 +111,6 @@ video {
 .snackbar-inner a {
   color: #fff;
 }
-.menu h4 {
-  padding: 0;
-  margin: 20px 0 0 0;
+.modal-dialog .form-group-label {
+  margin: 30px 0 20px 0;
 }

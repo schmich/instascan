@@ -20,11 +20,7 @@ var app = new Vue({
       pattern: '',
       output: ''
     },
-    currentHttpAction: {
-      url: '',
-      captureImage: false,
-      enabling: false
-    },
+    currentHttpAction: { },
     scans: store.get('scans') || [],
     transforms: store.get('transforms') || [],
     linkAction: store.get('link-action') || 'none',
@@ -89,6 +85,11 @@ var app = new Vue({
         if (enabled) {
           this.editHttpAction(true);
         }
+      });
+
+      // Workaround: trigger change events on modal form inputs to ensure styling is correct.
+      $('.modal').on('show.bs.modal', function (e) {
+        $(e.currentTarget).find('.form-control').trigger('change');
       });
 
       new Clipboard('.clipboard-copy', {
@@ -162,10 +163,25 @@ var app = new Vue({
     },
 
     editHttpAction: function (enabling = false) {
-      this.currentHttpAction.url = this.httpAction.url;
-      this.currentHttpAction.captureImage = this.httpAction.captureImage;
-      this.currentHttpAction.enabling = enabling;
-      $('#http-action-dialog').modal();
+      var headers = [{ name: '', value: '' }];
+      var currentHeaders = this.httpAction.headers;
+      if (currentHeaders && currentHeaders.length) {
+        headers = [{
+          name: currentHeaders[0].name.trim(),
+          value: currentHeaders[0].value.trim()
+        }];
+      }
+
+      this.currentHttpAction = {
+        url: (this.httpAction.url || '').trim(),
+        captureImage: this.httpAction.captureImage,
+        headers: headers,
+        enabling: enabling
+      };
+
+      setTimeout(function () {
+        $('#http-action-dialog').modal();
+      }, 0);
     },
 
     closeHttpActionDialog: function () {
@@ -181,8 +197,18 @@ var app = new Vue({
     },
 
     acceptHttpActionDialog: function () {
-      this.httpAction.url = this.currentHttpAction.url;
-      this.httpAction.captureImage = this.currentHttpAction.captureImage;
+      var current = this.currentHttpAction;
+
+      this.httpAction = {
+        enabled: true,
+        url: current.url.trim(),
+        captureImage: current.captureImage,
+        headers: [{
+          name: current.headers[0].name.trim(),
+          value: current.headers[0].value.trim()
+        }]
+      };
+
       this.closeHttpActionDialog();
     },
 
@@ -253,7 +279,7 @@ var app = new Vue({
         }
       }
 
-      if (this.httpAction.enabled) {
+      if (this.httpAction.enabled && this.httpAction.url) {
         var body = {
           content: scan.content,
           date: scan.date
@@ -263,16 +289,24 @@ var app = new Vue({
           body.image = image;
         }
 
+        var sendHeaders = {};
+
+        var headers = this.httpAction.headers;
+        if (headers && headers.length && headers[0].name && headers[0].value) {
+          sendHeaders[headers[0].name] = headers[0].value;
+        }
+
         $.ajax({
           method: 'POST',
           url: this.httpAction.url,
+          headers: sendHeaders,
           contentType: 'application/json',
           data: JSON.stringify(body),
           processData: false
         }).done(function () {
           // TODO.
-        }).fail(function () {
-          // TODO.
+        }).fail(function (e) {
+          console.error('Failed to POST scan to URL.', e);
         });
       }
     }

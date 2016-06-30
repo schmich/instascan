@@ -76,7 +76,7 @@
               <div class="form-group">
                 <div v-for="camera in cameras" class="radiobtn radiobtn-adv">
                   <label for="camera-{{$index}}">
-                    <input class="access-hide" id="camera-{{$index}}" name="activeCamera" type="radio" v-bind:value="camera.id" v-model="activeCamera">
+                    <input class="access-hide" id="camera-{{$index}}" name="activeCamera" type="radio" :value="camera.id" v-model="activeCamera">
                     {{ camera.name }}
                     <span class="radiobtn-circle"></span><span class="radiobtn-circle-check"></span>
                   </label>
@@ -208,11 +208,11 @@
               <p>The output can use <span class="code">$&amp;</span> for the entire matched expression, <span class="code">$1</span> for the first capture group, <span class="code">$2</span> for the second capture group, etc.</p>
               <div class="form-group form-group-label">
                 <label class="floating-label" for="pattern">Input pattern (regular expression)</label>
-                <input class="form-control" id="pattern" type="text" value=" " v-model="currentTransform.pattern">
+                <input class="form-control" id="pattern" type="text" v-model="currentTransform.pattern">
               </div>
               <div class="form-group form-group-label">
                 <label class="floating-label" for="output">Output transformation</label>
-                <input class="form-control" id="output" type="text" value=" " v-model="currentTransform.output">
+                <input class="form-control" id="output" type="text" v-model="currentTransform.output">
               </div>
             </fieldset>
           </form>
@@ -235,18 +235,34 @@
         <div class="modal-inner">
           <form>
             <fieldset>
-              <p>After scanning, the scanned content and image data will be POSTed to the URL specified below.</p>
+              <p>Scanned content and image data (<span class="code">image/webp</span> data URI) will be sent to the URL specified below.</p>
               <p>If the URL is on another domain, it needs to have <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS" target="_blank">CORS enabled</a> to POST from the current domain.</p>
               <div class="form-group form-group-label">
                 <label class="floating-label" for="url">URL Endpoint</label>
                 <input class="form-control" id="url" type="text" v-model="currentHttpAction.url">
               </div>
-              <div class="checkbox checkbox-adv">
-                <label for="post-image">
-                  <input class="access-hide" id="post-image" name="post-image" type="checkbox" v-model="currentHttpAction.captureImage">
-                  Include base64-encoded image data in payload
-                  <span class="checkbox-circle"></span><span class="checkbox-circle-check"></span><span class="checkbox-circle-icon icon">done</span>
-                </label>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group form-group-label">
+                    <label class="floating-label" for="headerName">Optional header name</label>
+                    <input class="form-control" id="headerName" type="text" v-model="currentHttpAction.headers[0].name">
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group form-group-label">
+                    <label class="floating-label" for="headerValue">Optional header value</label>
+                    <input class="form-control" id="headerValue" type="text" v-model="currentHttpAction.headers[0].value">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="checkbox checkbox-adv">
+                  <label for="post-image">
+                    <input class="access-hide" id="post-image" name="post-image" type="checkbox" v-model="currentHttpAction.captureImage">
+                    Include scanned image in payload
+                    <span class="checkbox-circle"></span><span class="checkbox-circle-check"></span><span class="checkbox-circle-icon icon">done</span>
+                  </label>
+                </div>
               </div>
             </fieldset>
           </form>
