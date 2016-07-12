@@ -34,9 +34,9 @@ Webcam-driven HTML5 QR code scanner.
 
 - Create a new scanner with options.
 - `opts.monitor`: The HTML element to use for the camera's video preview. Must be a `<video>` element. By default, an invisible element will be created.
-- `opts.mirror`: Whether to mirror the video preview. Default `true`.
-- `opts.backgroundScan`: Whether to scan when the tab is not shown/focused. When `false`, this reduces CPU usage when the page is not active. Default `false`.
-- `opts.refractoryPeriod`: The period, in milliseconds, before the same QR code will be consecutively recognized. Default `5000`.
+- `opts.mirror`: Whether to horizontally mirror the video preview. This is helpful when trying to scan a QR code with a user-facing camera. Default `true`.
+- `opts.backgroundScan`: Whether to actively scan when the tab is not active. When `false`, this reduces CPU usage when the tab is not active. Default `false`.
+- `opts.refractoryPeriod`: The period, in milliseconds, before the same QR code will be recognized in succession. Default `5000`.
 - `opts.scanPeriod`: The period, in rendered frames, between scans. A lower scan period increases CPU usage but makes scan response faster. Default `1` (i.e. analyze every frame).
 - `opts.captureImage`: Whether to include the scanned image data as part of the scan result. See the `scan` event for format details. Default `false`.
 
