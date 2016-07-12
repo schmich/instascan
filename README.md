@@ -3,7 +3,7 @@ Webcam-driven HTML5 QR code scanner.
 
 ## Installation
 
-Instascan is a static site. Copy the [public](public) folder to a web server and serve over HTTPS (required for WebRTC in Chrome).
+Instascan is a static site. Copy the [app/public](app/public) folder to a web server and serve over HTTPS (required for WebRTC in Chrome).
 
 ## Notes
 
