@@ -121,7 +121,7 @@ var app = new Vue({
         }
       });
 
-      var audioElem = $('<audio>').attr('src', 'scan.mp3').attr('preload', 'auto');
+      var audioElem = $('<audio>').attr('src', 'audio/scan.mp3').attr('preload', 'auto');
       this.chime = audioElem[0];
     },
 
