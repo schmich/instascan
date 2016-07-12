@@ -62,8 +62,8 @@ Webcam-driven HTML5 QR code scanner.
 
 - Raised when a QR code is scanned using the camera.
 - `callback`: `function (content, image)`
-- `content`: Scanned content encoded by QR code
-- `image`: Base64-encoded [WebP](https://en.wikipedia.org/wiki/WebP)-compressed data URI
+- `content`: Scanned content decoded from the QR code.
+- `image`: `null` if `scanner.captureImage` is `false`, otherwise, a base64-encoded [WebP](https://en.wikipedia.org/wiki/WebP)-compressed data URI of the camera frame used to decode the QR code.
 
 ### `scanner.addListener('active', callback)`
 
