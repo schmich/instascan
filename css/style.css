@@ -101,9 +101,12 @@ video {
   display: flex;
   justify-content: center;
 }
+.snackbar.error .snackbar-inner {
+  background: #d32f2f;
+}
 .snackbar-inner {
   font-family: Roboto;
-  background: #388E3C;
+  background: #388e3c;
   color: #fff;
   font-size: 20px;
   padding: 20px;

@@ -15,6 +15,7 @@ var app = new Vue({
   data: {
     store: store,
     cameras: [],
+    activeCamera: null,
     chime: null,
     currentTransform: { },
     currentHttpAction: { },
@@ -22,7 +23,7 @@ var app = new Vue({
     transforms: store.get('transforms') || [],
     linkAction: store.get('link-action') || 'none',
     httpAction: store.get('http-action') || { enabled: false },
-    activeCamera: store.get('active-camera') || null,
+    activeCameraId: store.get('active-camera-id') || null,
     playAudio: store.get('play-audio') || false,
     allowBackgroundScan: store.get('background-scan') || false
   },
@@ -33,18 +34,24 @@ var app = new Vue({
       var scanner = new CameraQrScanner(document.querySelector('#camera'));
       scanner.onResult = this.onScanResult;
 
-      scanner.getCameras(function (cameras) {
+      Camera.getCameras(function (err, cameras) {
         self.cameras = cameras;
-        if (!self.activeCamera) {
-          self.activeCamera = cameras[0].id;
-        } else {
-          scanner.start(self.activeCamera);
+
+        var camera = cameras[0];
+        if (self.activeCameraId) {
+          camera = cameras.find(c => c.id === self.activeCameraId) || camera;
         }
+
+        self.activeCamera = camera;
       });
 
       this.$watch('activeCamera', function (camera) {
-        self.store.set('active-camera', camera);
-        scanner.start(camera);
+        self.store.set('active-camera-id', camera.id);
+        scanner.start(camera, function (err) {
+          if (err && err.name === 'PermissionDeniedError') {
+            self.showError('Camera access denied.');
+          }
+        });
       });
 
       this.$watch('playAudio', function (play) {
@@ -84,7 +91,7 @@ var app = new Vue({
         }
       });
 
-      // Workaround: trigger change events on modal form inputs to ensure styling is correct.
+      // Workaround: trigger change events on modal form inputs to fix styling.
       $('.modal').on('show.bs.modal', function (e) {
         $(e.currentTarget).find('.form-control').trigger('change');
       });
@@ -230,12 +237,29 @@ var app = new Vue({
 
     downloadHistory: function () {
       var content = JSON.stringify(this.scans, null, '  ');
-      var blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-      saveAs(blob, "instascan.json");
+      var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      saveAs(blob, 'instascan.json');
     },
 
     isHttpUrl: function (string) {
       return string.match(/^https?:\/\//i);
+    },
+
+    snackbar: function (message, durationSec, addClass) {
+      $('body').snackbar({
+        alive: durationSec * 1000,
+        content: message
+      });
+
+      $('body .snackbar').addClass(addClass);
+    },
+
+    showError: function (message) {
+      this.snackbar(message, 7, 'error');
+    },
+
+    showSuccess: function (message) {
+      this.snackbar(message, 5);
     },
 
     onScanResult: function (content, image) {
@@ -247,23 +271,20 @@ var app = new Vue({
         this.chime.play();
       }
 
-      var snackbarContent = 'Scanned: '
+      var message = 'Scanned: '
         + content
         + '<a href="#" class="clipboard-copy" data-dismiss="snackbar" data-clipboard="'
         + escapeHtml(content)
         + '"><span class="icon icon-md">content_copy</span> Copy</a>';
 
       if (isHttpUrl) {
-        snackbarContent += '<a href="'
+        message += '<a href="'
           + escapeHtml(content)
           + '" target="_blank" data-dismiss="snackbar">'
           + '<span class="icon icon-md">call_made</span> Open</a>';
       }
 
-      $('body').snackbar({
-        alive: 5 * 1000,
-        content: snackbarContent
-      });
+      this.showSuccess(message);
 
       var scan = this.addScan(content);
 

@@ -1,7 +1,7 @@
 function CameraQrScanner(previewContainer) {
   var self = this;
 
-  this.stream = null;
+  this.camera = null;
   this.scanActive = false;
   this.lastResult = null;
   this.refractoryTimeout = null;
@@ -16,42 +16,19 @@ function CameraQrScanner(previewContainer) {
 
   this.onResult = function () { };
 
-  this.getCameras = function (callback) {
-    navigator.mediaDevices.enumerateDevices()
-      .then(function (devices) {
-        var results = devices
-          .filter(d => d.kind === 'videoinput')
-          .map(d => { return { id: d.deviceId, name: d.label }; });
-
-        callback(results);
-      });
-  };
-
-  this.start = function (cameraId) {
+  this.start = function (camera, callback) {
     this.stop();
 
-    var constraints = {
-      audio: false,
-      video: {
-        mandatory: {
-          minWidth: 600,
-          maxWidth: 800,
-          minAspectRatio: 1.6
-        },
-        optional: []
+    this.camera = camera;
+
+    this.camera.start(function (err, streamUrl) {
+      if (err) {
+        callback(err);
+      } else {
+        cameraElement.src = streamUrl;
+        startScan();
+        callback(null);
       }
-    };
-
-    if (cameraId) {
-      constraints.video.mandatory.sourceId = cameraId;
-    }
-
-    navigator.webkitGetUserMedia(constraints, function (stream) {
-      self.stream = stream;
-      cameraElement.src = window.URL.createObjectURL(stream);
-      startScan();
-    }, function (err) {
-      // TODO.
     });
   };
 
@@ -59,12 +36,9 @@ function CameraQrScanner(previewContainer) {
     this.scanActive = false;
     cameraElement.src = '';
 
-    if (this.stream) {
-      for (let stream of this.stream.getVideoTracks()) {
-        stream.stop();
-      }
-
-      this.stream = null;
+    if (this.camera) {
+      this.camera.stop();
+      this.camera = null;
     }
   };
 
