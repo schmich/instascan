@@ -47,6 +47,11 @@ var app = new Vue({
 
       this.$watch('activeCamera', function (camera) {
         self.store.set('active-camera-id', camera.id);
+
+        if (camera.name) {
+          this.showInfo(camera.name);
+        }
+
         scanner.start(camera, function (err) {
           if (err && err.name === 'PermissionDeniedError') {
             self.showError('Camera access denied.');
@@ -245,13 +250,14 @@ var app = new Vue({
       return string.match(/^https?:\/\//i);
     },
 
-    snackbar: function (message, durationSec, addClass) {
+    snackbar: function (message, durationSec, type) {
       $('body').snackbar({
         alive: durationSec * 1000,
         content: message
       });
 
-      $('body .snackbar').addClass(addClass);
+      $('body .snackbar').removeClass('error info success');
+      $('body .snackbar').addClass(type);
     },
 
     showError: function (message) {
@@ -259,7 +265,11 @@ var app = new Vue({
     },
 
     showSuccess: function (message) {
-      this.snackbar(message, 5);
+      this.snackbar(message, 5, 'success');
+    },
+
+    showInfo: function (message) {
+      this.snackbar(message, 2, 'info');
     },
 
     onScanResult: function (content, image) {
