@@ -1,9 +1,41 @@
 # Instascan
 Webcam-driven HTML5 QR code scanner.
 
-## Installation
+## Example
 
-Instascan is a static site. Copy the [app/public](app/public) folder to a web server and serve over HTTPS (required for WebRTC in Chrome).
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Instascan</title>
+    <script type="text/javascript" src="dist/instascan.min.js"></script>
+  </head>
+  <body>
+    <video id="monitor"></video>
+    <script type="text/javascript">
+      var opts = {
+        monitor: document.getElementById('monitor'),
+        mirror: true,
+        backgroundScan: false,
+        refractoryPeriod: 3 * 1000,
+        scanPeriod: 5,
+        captureImage: false
+      };
+  
+      var scanner = new Instascan.Scanner(opts);
+      scanner.addListener('scan', function (content, image) {
+        console.log(content);
+      });
+  
+      Instascan.Camera.getCameras(function (err, cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        }
+      });
+    </script>
+  </body>
+</html>
+```
 
 ## Notes
 
