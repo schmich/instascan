@@ -17,6 +17,7 @@ var app = new Vue({
     cameras: [],
     activeCamera: null,
     chime: null,
+    scanner: null,
     currentTransform: { },
     currentHttpAction: { },
     scans: store.get('scans') || [],
@@ -30,6 +31,14 @@ var app = new Vue({
   methods: {
     start: function () {
       var self = this;
+
+      function startScanner(camera) {
+        scanner.start(camera, function (err) {
+          if (err && err.name === 'PermissionDeniedError') {
+            self.showError('Camera access denied.');
+          }
+        });
+      }
 
       var scanner = new CameraQrScanner(document.querySelector('#camera'));
       scanner.onResult = this.onScanResult;
@@ -52,11 +61,7 @@ var app = new Vue({
           this.showInfo(camera.name);
         }
 
-        scanner.start(camera, function (err) {
-          if (err && err.name === 'PermissionDeniedError') {
-            self.showError('Camera access denied.');
-          }
-        });
+        startScanner(camera);
       });
 
       this.$watch('playAudio', function (play) {
@@ -114,7 +119,7 @@ var app = new Vue({
 
         if (state === 'visible') {
           setTimeout(function () {
-            scanner.start(self.activeCamera);
+            startScanner(self.activeCamera);
           }, 0);
         } else {
           scanner.stop();
