@@ -13,16 +13,7 @@ Webcam-driven HTML5 QR code scanner.
   <body>
     <video id="monitor"></video>
     <script type="text/javascript">
-      var opts = {
-        monitor: document.getElementById('monitor'),
-        mirror: true,
-        backgroundScan: false,
-        refractoryPeriod: 3 * 1000,
-        scanPeriod: 5,
-        captureImage: false
-      };
-  
-      var scanner = new Instascan.Scanner(opts);
+      var scanner = new Instascan.Scanner({ monitor: document.getElementById('monitor') });
       scanner.addListener('scan', function (content, image) {
         console.log(content);
       });
