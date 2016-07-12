@@ -28,7 +28,7 @@ Webcam-driven HTML5 QR code scanner.
       });
   
       Instascan.Camera.getCameras(function (err, cameras) {
-        if (cameras.length > 0) {
+        if (cameras && cameras.length > 0) {
           scanner.start(cameras[0]);
         }
       });
@@ -36,6 +36,60 @@ Webcam-driven HTML5 QR code scanner.
   </body>
 </html>
 ```
+
+## API
+
+### `new Instascan.Scanner(opts)`
+
+- Create a new scanner with options.
+- `opts.monitor`: The HTML element to use for the camera's video preview. Must be a `<video>` element. By default, an invisible element will be created.
+- `opts.mirror`: Whether to mirror the video preview. Default `true`.
+- `opts.backgroundScan`: Whether to scan when the tab is not shown/focused. When `false`, this reduces CPU usage when the page is not active. Default `false`.
+- `opts.refractoryPeriod`: The period, in milliseconds, before the same QR code will be consecutively recognized. Default `5000`.
+- `opts.scanPeriod`: The period, in rendered frames, between scans. A lower scan period increases CPU usage but makes scan response faster. Default `1` (i.e. analyze every frame).
+- `opts.captureImage`: Whether to include the scanned image data as part of the scan result. See the `scan` event for format details. Default `false`.
+
+### `scanner.start(camera)`
+
+- Start scanning using `camera` as the source.
+- `camera`: Instance of `Instascan.Camera` from `Instascan.Camera.getCameras`.
+
+### `scanner.addListener('scan', callback)`
+
+- Raised when a QR code is scanned using the camera.
+- `callback`: `function (content, image)`
+- `content`: Scanned content encoded by QR code
+- `image`: Base64-encoded [WebP](https://en.wikipedia.org/wiki/WebP)-compressed data URI
+
+### `scanner.addListener('active', callback)`
+
+- Raised when the scanner becomes active as the result of `scanner.start` or the tab gaining focus.
+- `callback`: `function ()`
+
+### `scanner.addListener('inactive', callback)`
+
+- Raised when the scanner becomes inactive as the result of `scanner.stop` or the tab losing focus.
+- `callback`: `function ()`
+
+### `scanner.addListener('error', callback)`
+
+- Raised when an error occurs while trying to scan.
+- `callback`: `function (err)`
+- `err`: Error details.
+
+### `Instascan.Camera.getCameras(callback)`
+
+- `callback`: `function (err, cameras)`
+- `err`: Any errors that occurred when enumerating cameras.
+- `cameras`: Array of `Instascan.Camera` instances available for use.
+
+### `camera.id`
+
+- Unique camera ID. Assigned by the browser.
+
+### `camera.name`
+
+- Camera name, including manufacturer and model, e.g. `Microsoft Lifecam HD-3000`.
 
 ## Notes
 
