@@ -87,9 +87,9 @@ Webcam-driven HTML5 QR code scanner.
 
 - Camera name, including manufacturer and model, e.g. `Microsoft Lifecam HD-3000`.
 
-## Notes
+## Credits
 
-- Powered by the [Emscripten build](https://github.com/kig/zxing-cpp-emscripten) of the [C++ port](https://github.com/glassechidna/zxing-cpp) of the [ZXing Java library](https://github.com/zxing/zxing).
+Powered by the [Emscripten JavaScript build](https://github.com/kig/zxing-cpp-emscripten) of the [C++ port](https://github.com/glassechidna/zxing-cpp) of the [ZXing Java library](https://github.com/zxing/zxing).
 
 ## License
 
