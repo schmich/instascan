@@ -34,8 +34,8 @@ function CameraQrScanner(previewContainer) {
       audio: false,
       video: {
         mandatory: {
-          minWidth: 400,
-          maxWidth: 600,
+          minWidth: 600,
+          maxWidth: 800,
           minAspectRatio: 1.6
         },
         optional: []
