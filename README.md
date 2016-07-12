@@ -54,6 +54,10 @@ Webcam-driven HTML5 QR code scanner.
 - Start scanning using `camera` as the source.
 - `camera`: Instance of `Instascan.Camera` from `Instascan.Camera.getCameras`.
 
+### `scanner.stop()`
+
+- Stop scanning. This releases the camera as well.
+
 ### `scanner.addListener('scan', callback)`
 
 - Raised when a QR code is scanned using the camera.
@@ -79,6 +83,7 @@ Webcam-driven HTML5 QR code scanner.
 
 ### `Instascan.Camera.getCameras(callback)`
 
+- Enumerate available video devices.
 - `callback`: `function (err, cameras)`
 - `err`: Any errors that occurred when enumerating cameras.
 - `cameras`: Array of `Instascan.Camera` instances available for use.
