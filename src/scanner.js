@@ -170,6 +170,10 @@ class Scanner extends EventEmitter {
         },
         onleavestate: (event, from, to, camera) => {
           if (to === 'active') {
+            if (Visibility.state() !== 'visible' && !this.backgroundScan) {
+              return false;
+            }
+
             return this._enableScan(camera);
           }
         },
