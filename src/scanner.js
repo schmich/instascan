@@ -1,19 +1,17 @@
 const EventEmitter = require('events');
 const ZXing = require('./zxing')();
 const Visibility = require('visibilityjs');
+const StateMachine = require('javascript-state-machine');
 
 class ActiveScan {
   constructor(emitter, analyzer, captureImage, scanPeriod, refractoryPeriod) {
     this.active = false;
     this.scanPeriod = scanPeriod;
     this.frameCount = 0;
-
     this.emitter = emitter;
     this.analyzer = analyzer;
     this.captureImage = captureImage;
     this.refractoryPeriod = refractoryPeriod;
-
-    this.start();
   }
 
   start() {
@@ -59,8 +57,8 @@ class ActiveScan {
 }
 
 class Analyzer {
-  constructor(videoElement) {
-    this.videoElement = videoElement;
+  constructor(video) {
+    this.video = video;
 
     this.imageBuffer = null;
     this.sensorLeft = null;
@@ -83,13 +81,13 @@ class Analyzer {
   }
 
   analyze(callback) {
-    if (!this.videoElement.videoWidth) {
+    if (!this.video.videoWidth) {
       return;
     }
 
     if (!this.imageBuffer) {
-      let videoWidth = this.videoElement.videoWidth;
-      let videoHeight = this.videoElement.videoHeight;
+      let videoWidth = this.video.videoWidth;
+      let videoHeight = this.video.videoHeight;
 
       this.sensorWidth = videoWidth;
       this.sensorHeight = videoHeight;
@@ -105,7 +103,7 @@ class Analyzer {
     }
 
     this.canvasContext.drawImage(
-      this.videoElement,
+      this.video,
       this.sensorLeft,
       this.sensorTop,
       this.sensorWidth,
@@ -133,74 +131,133 @@ class Scanner extends EventEmitter {
   constructor(opts) {
     super();
 
-    this.activeScan = null;
-    this.camera = null;
+    this._scan = null;
+    this._camera = null;
     this.scanPeriod = opts.scanPeriod || 1;
     this.refractoryPeriod = opts.refractoryPeriod || (5 * 1000);
     this.captureImage = opts.captureImage || false;
     this.backgroundScan = opts.backgroundScan || false;
+    this.video = this._configureVideo(opts);
+    this.analyzer = new Analyzer(this.video);
 
+    Visibility.change((e, state) => {
+      if (state === 'visible') {
+        setTimeout(() => {
+          if (this._fsm.can('activate')) {
+            this._fsm.activate();
+          }
+        }, 0);
+      } else {
+        if (!this.backgroundScan && this._fsm.can('deactivate')) {
+          this._fsm.deactivate();
+        }
+      }
+    });
+
+    this._fsm = StateMachine.create({
+      initial: 'stopped',
+      events: [
+        { name: 'start', from: 'stopped', to: 'started' },
+        { name: 'stop', from: ['started', 'active', 'inactive'], to: 'stopped' },
+        { name: 'activate', from: ['started', 'inactive'], to: 'active' },
+        { name: 'deactivate', from: ['started', 'active'], to: 'inactive' }
+      ],
+      callbacks: {
+        onactive: () => this.emit('active'),
+        onleaveactive: () => {
+          this._disableScan();
+          this.emit('inactive');
+        },
+        onleavestate: (event, from, to, camera) => {
+          if (to === 'active') {
+            return this._enableScan(camera);
+          }
+        },
+        onstarted: (event, from, to, camera) => this._fsm.activate(camera)
+      }
+    });
+
+    this.emit('inactive');
+  }
+
+  start(camera = null) {
+    if (this._fsm.can('start')) {
+      this._fsm.start(camera);
+    } else {
+      this._fsm.stop();
+      this._fsm.start(camera);
+    }
+  }
+
+  stop() {
+    if (this._fsm.can('stop')) {
+      this._fsm.stop();
+    }
+  }
+
+  set camera(camera) {
+    if (this._fsm.current === 'stopped' || this._fsm.current === 'inactive') {
+      this._camera = camera;
+    } else {
+      this._fsm.stop();
+      this._fsm.start(camera);
+    }
+  }
+
+  _enableScan(camera) {
+    this._camera = camera || this._camera;
+    if (!this._camera) {
+      return false;
+    }
+
+    this._camera.start((err, streamUrl) => {
+      if (err) {
+        this._fsm.transition.cancel();
+        this.emit('error', err);
+      } else {
+        this.video.src = streamUrl;
+        this._scan = new ActiveScan(this, this.analyzer, this.captureImage, this.scanPeriod, this.refractoryPeriod);
+        this._scan.start();
+        this._fsm.transition();
+      }
+    });
+
+    return StateMachine.ASYNC;
+  }
+
+  _disableScan() {
+    this.video.src = '';
+
+    if (this._scan) {
+      this._scan.stop();
+      this._scan = null;
+    }
+
+    if (this._camera) {
+      this._camera.stop();
+    }
+  }
+
+  _configureVideo(opts) {
     if (opts.monitor) {
       if (opts.monitor.tagName !== 'VIDEO') {
         throw new Exception('Monitor must be a <video> element.');
       }
     }
 
-    this.videoElement = opts.monitor || document.createElement('video');
-    this.videoElement.setAttribute('autoplay', 'autoplay');
+    var video = opts.monitor || document.createElement('video');
+    video.setAttribute('autoplay', 'autoplay');
 
-    if (opts.mirror !== false) {
-      this.videoElement.style.MozTransform = 'scaleX(-1)';
-      this.videoElement.style.webkitTransform = 'scaleX(-1)';
-      this.videoElement.style.OTransform = 'scaleX(-1)';
-      this.videoElement.style.msFilter = 'FlipH';
-      this.videoElement.style.filter = 'FlipH';
-      this.videoElement.style.transform = 'scaleX(-1)';
+    if (opts.mirror !== false && opts.monitor) {
+      video.style.MozTransform = 'scaleX(-1)';
+      video.style.webkitTransform = 'scaleX(-1)';
+      video.style.OTransform = 'scaleX(-1)';
+      video.style.msFilter = 'FlipH';
+      video.style.filter = 'FlipH';
+      video.style.transform = 'scaleX(-1)';
     }
 
-    this.analyzer = new Analyzer(this.videoElement);
-
-    Visibility.change((e, state) => {
-      if (this.backgroundScan) {
-        return;
-      }
-
-      if (state === 'visible') {
-        setTimeout(() => this.start(this.camera), 0);
-      } else {
-        this.stop();
-      }
-    });
-  }
-
-  start(camera) {
-    this.stop();
-
-    this.camera = camera;
-
-    this.camera.start((err, streamUrl) => {
-      if (err) {
-        this.emit('error', err);
-      } else {
-        this.videoElement.src = streamUrl;
-        this.activeScan = new ActiveScan(this, this.analyzer, this.captureImage, this.scanPeriod, this.refractoryPeriod);
-        this.emit('active');
-      }
-    });
-  }
-
-  stop() {
-    this.videoElement.src = '';
-
-    if (this.activeScan) {
-      this.activeScan.stop();
-      this.activeScan = null;
-      this.emit('inactive');
-    }
-
-    if (this.camera) {
-      this.camera.stop();
-    }
+    return video;
   }
 }
 

@@ -40,6 +40,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
+    "javascript-state-machine": "^2.3.5",
     "visibilityjs": "^1.2.3"
   }
 }
