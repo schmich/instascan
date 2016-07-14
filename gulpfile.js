@@ -8,26 +8,33 @@ var babelify = require('babelify');
 
 gulp.task('default', ['build', 'watch']);
 
-gulp.task('dist', function () {
-  return browserify('./export.js', { noParse: [require.resolve('./src/zxing')] })
-    .transform(babelify, { ignore: /zxing\.js$/i, presets: ['es2015'] })
+gulp.task('watch', function () {
+  gulp.watch('./src/*.js', ['build']);
+  gulp.watch('./*.js', ['build']);
+});
+
+function build(file) {
+  return browserify(file, {
+      noParse: [require.resolve('./src/zxing')]
+    })
+    .transform(babelify, {
+      ignore: /zxing\.js$/i,
+      presets: ['es2015'],
+      plugins: ['syntax-async-functions', 'transform-regenerator']
+    })
     .bundle()
-    .pipe(source('instascan.js'))
+    .pipe(source('instascan.js'));
+}
+
+gulp.task('dist', function () {
+  return build('./export.js')
     .pipe(buffer())
     .pipe(uglify())
     .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest('./dist/'));
 });
 
-gulp.task('watch', function () {
-  gulp.watch('./src/*.js', ['build']);
-  gulp.watch('./*.js', ['build']);
-});
-
 gulp.task('build', function () {
-  return browserify('./export.js', { noParse: [require.resolve('./src/zxing')] })
-    .transform(babelify, { ignore: /zxing\.js$/i, presets: ['es2015'] })
-    .bundle()
-    .pipe(source('instascan.js'))
+  return build('./export.js')
     .pipe(gulp.dest('./dist/'));
 });

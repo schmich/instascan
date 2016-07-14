@@ -16,19 +16,19 @@ class ActiveScan {
 
   start() {
     this.active = true;
-    requestAnimationFrame(() => this.scan());
+    requestAnimationFrame(() => this._scan());
   }
 
   stop() {
     this.active = false;
   }
 
-  scan() {
+  _scan() {
     if (!this.active) {
       return;
     }
 
-    requestAnimationFrame(() => this.scan());
+    requestAnimationFrame(() => this._scan());
 
     if (++this.frameCount !== this.scanPeriod) {
       return;
@@ -36,23 +36,27 @@ class ActiveScan {
       this.frameCount = 0;
     }
 
-    this.analyzer.analyze((result, canvas) => {
-      if (result === this.lastResult) {
-        return;
-      }
+    let analysis = this.analyzer.analyze();
+    if (!analysis) {
+      return;
+    }
 
-      clearTimeout(this.refractoryTimeout);
-      this.refractoryTimeout = setTimeout(() => {
-        this.lastResult = null;
-      }, this.refractoryPeriod);
+    let { result, canvas } = analysis;
+    if (!result || result === this.lastResult) {
+      return;
+    }
 
-      let image = this.captureImage ? canvas.toDataURL('image/webp', 0.8) : null;
+    clearTimeout(this.refractoryTimeout);
+    this.refractoryTimeout = setTimeout(() => {
+      this.lastResult = null;
+    }, this.refractoryPeriod);
 
-      this.lastResult = result;
-      setTimeout(() => {
-        this.emitter.emit('scan', result, image);
-      }, 0);
-    });
+    let image = this.captureImage ? canvas.toDataURL('image/webp', 0.8) : null;
+
+    this.lastResult = result;
+    setTimeout(() => {
+      this.emitter.emit('scan', result, image);
+    }, 0);
   }
 }
 
@@ -80,9 +84,9 @@ class Analyzer {
     });
   }
 
-  analyze(callback) {
+  analyze() {
     if (!this.video.videoWidth) {
-      return;
+      return null;
     }
 
     if (!this.imageBuffer) {
@@ -99,7 +103,7 @@ class Analyzer {
 
       this.canvasContext = this.canvas.getContext('2d');
       this.imageBuffer = ZXing._resize(this.sensorWidth, this.sensorHeight);
-      return;
+      return null;
     }
 
     this.canvasContext.drawImage(
@@ -117,13 +121,15 @@ class Analyzer {
 
     let err = ZXing._decode_qr(this.decodeCallback);
     if (err) {
-      return;
+      return null;
     }
 
     let result = window.zxDecodeResult;
     if (result != null) {
-      callback(result, this.canvas);
+      return { result: result, canvas: this.canvas };
     }
+
+    return null;
   }
 }
 
@@ -168,13 +174,13 @@ class Scanner extends EventEmitter {
           this._disableScan();
           this.emit('inactive');
         },
-        onleavestate: (event, from, to, camera) => {
+        onleavestate: async (event, from, to, camera) => {
           if (to === 'active') {
             if (Visibility.state() !== 'visible' && !this.backgroundScan) {
               return false;
             }
 
-            return this._enableScan(camera);
+            return await this._enableScan(camera);
           }
         },
         onstarted: (event, from, to, camera) => this._fsm.activate(camera)
@@ -208,25 +214,21 @@ class Scanner extends EventEmitter {
     }
   }
 
-  _enableScan(camera) {
+  async _enableScan(camera) {
     this._camera = camera || this._camera;
     if (!this._camera) {
       return false;
     }
 
-    this._camera.start((err, streamUrl) => {
-      if (err) {
-        this._fsm.transition.cancel();
-        this.emit('error', err);
-      } else {
-        this.video.src = streamUrl;
-        this._scan = new ActiveScan(this, this.analyzer, this.captureImage, this.scanPeriod, this.refractoryPeriod);
-        this._scan.start();
-        this._fsm.transition();
-      }
-    });
-
-    return StateMachine.ASYNC;
+    try {
+      let streamUrl = await this._camera.start();
+      this.video.src = streamUrl;
+      this._scan = new ActiveScan(this, this.analyzer, this.captureImage, this.scanPeriod, this.refractoryPeriod);
+      this._scan.start();
+    } catch (err) {
+      this.emit('error', err);
+      return false;
+    }
   }
 
   _disableScan() {

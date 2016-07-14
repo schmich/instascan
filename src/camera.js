@@ -10,7 +10,7 @@ class Camera {
     this.stream = null;
   }
 
-  start(callback) {
+  async start() {
     var constraints = {
       audio: false,
       video: {
@@ -24,13 +24,8 @@ class Camera {
       }
     };
 
-    navigator.webkitGetUserMedia(constraints, stream => {
-      this.stream = stream;
-      var streamUrl = window.URL.createObjectURL(stream);
-      callback(null, streamUrl);
-    }, err => {
-      callback(err, null);
-    });
+    this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+    return window.URL.createObjectURL(this.stream);
   }
 
   stop() {
@@ -45,18 +40,12 @@ class Camera {
     this.stream = null;
   }
 
-  static getCameras(callback) {
-    navigator.mediaDevices.enumerateDevices()
-      .then(function (devices) {
-        var results = devices
-          .filter(d => d.kind === 'videoinput')
-          .map(d => new Camera(d.deviceId, cleanLabel(d.label)));
+  static async getCameras() {
+    var devices = await navigator.mediaDevices.enumerateDevices();
 
-        callback(null, results);
-      })
-      .catch(function (err) {
-        callback(err, null);
-      });
+    return devices
+      .filter(d => d.kind === 'videoinput')
+      .map(d => new Camera(d.deviceId, cleanLabel(d.label)));
   }
 }
 
