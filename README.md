@@ -85,7 +85,7 @@ Webcam-driven HTML5 QR code scanner.
 
 ### `camera.name`
 
-- Camera name, including manufacturer and model, e.g. `Microsoft Lifecam HD-3000`.
+- Camera name, including manufacturer and model, e.g. "Microsoft Lifecam HD-3000". Can be `null` if the user has not yet allowed camera access, e.g. on first launch of the app.
 
 ## Credits
 

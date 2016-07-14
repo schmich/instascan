@@ -1,6 +1,6 @@
-function cleanLabel(label) {
+function cameraName(label) {
   var clean = label.replace(/\s*\([0-9a-f]+(:[0-9a-f]+)?\)\s*$/, '');
-  return clean || label;
+  return clean || label || null;
 }
 
 class Camera {
@@ -45,7 +45,7 @@ class Camera {
 
     return devices
       .filter(d => d.kind === 'videoinput')
-      .map(d => new Camera(d.deviceId, cleanLabel(d.label)));
+      .map(d => new Camera(d.deviceId, cameraName(d.label)));
   }
 }
 
