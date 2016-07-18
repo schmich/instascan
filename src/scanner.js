@@ -220,9 +220,9 @@ class Scanner extends EventEmitter {
     }
   }
 
-  stop() {
+  async stop() {
     if (this._fsm.can('stop')) {
-      this._fsm.stop();
+      await this._fsm.stop();
     }
   }
 

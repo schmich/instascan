@@ -48,7 +48,8 @@ Webcam-driven HTML5 QR code scanner.
 
 ### `scanner.stop()`
 
-- Stop scanning. This stops the camera as well.
+- Stop scanning and deactivate the camera. Returns promise.
+- Continuation: `function ()`, called when camera and scanning have stopped.
 
 ### `scanner.addListener('scan', callback)`
 
