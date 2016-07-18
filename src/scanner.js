@@ -148,52 +148,7 @@ class Scanner extends EventEmitter {
     let refractoryPeriod = opts.refractoryPeriod || (5 * 1000);
 
     this._scan = new ActiveScan(this, this._analyzer, captureImage, scanPeriod, refractoryPeriod);
-
-    this._fsm = StateMachine.create({
-      initial: 'stopped',
-      events: [
-        {
-          name: 'start',
-          from: 'stopped',
-          to: 'started'
-        },
-        {
-          name: 'stop',
-          from: ['started', 'active', 'inactive'],
-          to: 'stopped'
-        },
-        {
-          name: 'activate',
-          from: ['started', 'inactive'],
-          to: ['active', 'inactive'],
-          condition: function (options) {
-            if (Visibility.state() === 'visible' || this.backgroundScan) {
-              return 'active';
-            } else {
-              return 'inactive';
-            }
-          }
-        },
-        {
-          name: 'deactivate',
-          from: ['started', 'active'],
-          to: 'inactive'
-        }
-      ],
-      callbacks: {
-        onenteractive: async (options) => {
-          await this._enableScan(options.args[0]);
-          this.emit('active');
-        },
-        onleaveactive: () => {
-          this._disableScan();
-          this.emit('inactive');
-        },
-        onenteredstarted: async (options) => {
-          await this._fsm.activate(options.args[0]);
-        }
-      }
-    });
+    this._fsm = this._createStateMachine();
 
     Visibility.change((e, state) => {
       if (state === 'visible') {
@@ -309,6 +264,54 @@ class Scanner extends EventEmitter {
     video.setAttribute('autoplay', 'autoplay');
 
     return video;
+  }
+
+  _createStateMachine() {
+    return StateMachine.create({
+      initial: 'stopped',
+      events: [
+        {
+          name: 'start',
+          from: 'stopped',
+          to: 'started'
+        },
+        {
+          name: 'stop',
+          from: ['started', 'active', 'inactive'],
+          to: 'stopped'
+        },
+        {
+          name: 'activate',
+          from: ['started', 'inactive'],
+          to: ['active', 'inactive'],
+          condition: function (options) {
+            if (Visibility.state() === 'visible' || this.backgroundScan) {
+              return 'active';
+            } else {
+              return 'inactive';
+            }
+          }
+        },
+        {
+          name: 'deactivate',
+          from: ['started', 'active'],
+          to: 'inactive'
+        }
+      ],
+      callbacks: {
+        onenteractive: async (options) => {
+          await this._enableScan(options.args[0]);
+          this.emit('active');
+        },
+        onleaveactive: () => {
+          this._disableScan();
+          this.emit('inactive');
+        },
+        onenteredstarted: async (options) => {
+          await this._fsm.activate(options.args[0]);
+        }
+      }
+    });
   }
 }
 
