@@ -17,9 +17,9 @@ Webcam-driven HTML5 QR code scanner.
       scanner.addListener('scan', function (content, image) {
         console.log(content);
       });
-  
-      Instascan.Camera.getCameras(function (err, cameras) {
-        if (cameras && cameras.length > 0) {
+
+      Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
           scanner.start(cameras[0]);
         }
       });
@@ -42,12 +42,13 @@ Webcam-driven HTML5 QR code scanner.
 
 ### `scanner.start(camera)`
 
-- Start scanning using `camera` as the source.
+- Start scanning using `camera` as the source. Returns promise.
 - `camera`: Instance of `Instascan.Camera` from `Instascan.Camera.getCameras`.
+- Continuation: `function ()`, called when camera is active and scanning has started.
 
 ### `scanner.stop()`
 
-- Stop scanning. This releases the camera as well.
+- Stop scanning. This stops the camera as well.
 
 ### `scanner.addListener('scan', callback)`
 
@@ -66,17 +67,10 @@ Webcam-driven HTML5 QR code scanner.
 - Raised when the scanner becomes inactive as the result of `scanner.stop` or the tab losing focus.
 - `callback`: `function ()`
 
-### `scanner.addListener('error', callback)`
+### `Instascan.Camera.getCameras()`
 
-- Raised when an error occurs while trying to scan.
-- `callback`: `function (err)`
-- `err`: Error details.
-
-### `Instascan.Camera.getCameras(callback)`
-
-- Enumerate available video devices.
-- `callback`: `function (err, cameras)`
-- `err`: Any errors that occurred when enumerating cameras.
+- Enumerate available video devices. Returns promise.
+- Continuation: `function (cameras)`, called when cameras are available.
 - `cameras`: Array of `Instascan.Camera` instances available for use.
 
 ### `camera.id`
