@@ -82,6 +82,10 @@ Webcam-driven HTML5 QR code scanner.
 
 - Camera name, including manufacturer and model, e.g. "Microsoft Lifecam HD-3000". Can be `null` if the user has not yet allowed camera access, e.g. on first launch of the app.
 
+## Compatibility
+
+Instascan works with any browser that [supports the getUserMedia API](http://caniuse.com/#feat=stream), which currently includes Chome, Firefox, Opera, and Edge. IE and Safari are not supported.
+
 ## Credits
 
 Powered by the [Emscripten JavaScript build](https://github.com/kig/zxing-cpp-emscripten) of the [C++ port](https://github.com/glassechidna/zxing-cpp) of the [ZXing Java library](https://github.com/zxing/zxing).
