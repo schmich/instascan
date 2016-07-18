@@ -7,7 +7,7 @@ class Camera {
   constructor(id, name) {
     this.id = id;
     this.name = name;
-    this.stream = null;
+    this._stream = null;
   }
 
   async start() {
@@ -24,20 +24,20 @@ class Camera {
       }
     };
 
-    this.stream = await navigator.mediaDevices.getUserMedia(constraints);
-    return window.URL.createObjectURL(this.stream);
+    this._stream = await navigator.mediaDevices.getUserMedia(constraints);
+    return window.URL.createObjectURL(this._stream);
   }
 
   stop() {
-    if (!this.stream) {
+    if (!this._stream) {
       return;
     }
 
-    for (let stream of this.stream.getVideoTracks()) {
+    for (let stream of this._stream.getVideoTracks()) {
       stream.stop();
     }
 
-    this.stream = null;
+    this._stream = null;
   }
 
   static async getCameras() {
