@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 const ZXing = require('./zxing')();
 const Visibility = require('visibilityjs');
-const StateMachine = require('javascript-state-machine');
+const StateMachine = require('fsm-as-promised');
 
 class ActiveScan {
   constructor(emitter, analyzer, captureImage, scanPeriod, refractoryPeriod) {
@@ -169,33 +169,32 @@ class Scanner extends EventEmitter {
         { name: 'deactivate', from: ['started', 'active'], to: 'inactive' }
       ],
       callbacks: {
-        onactive: () => this.emit('active'),
         onleaveactive: () => {
           this._disableScan();
           this.emit('inactive');
         },
-        onleavestate: async (event, from, to, camera) => {
-          if (to === 'active') {
-            if (Visibility.state() !== 'visible' && !this.backgroundScan) {
-              return false;
-            }
-
-            return await this._enableScan(camera);
+        onenteractive: async (options) => {
+          if (Visibility.state() !== 'visible' && !this.backgroundScan) {
+            return false;
           }
+
+          return await this._enableScan(options.args[0]);
         },
-        onstarted: (event, from, to, camera) => this._fsm.activate(camera)
+        onenteredstarted: async (options) => {
+          await this._fsm.activate(options.args[0]);
+        }
       }
     });
 
     this.emit('inactive');
   }
 
-  start(camera = null) {
+  async start(camera = null) {
     if (this._fsm.can('start')) {
-      this._fsm.start(camera);
+      await this._fsm.start(camera);
     } else {
-      this._fsm.stop();
-      this._fsm.start(camera);
+      await this._fsm.stop();
+      await this._fsm.start(camera);
     }
   }
 
@@ -217,18 +216,14 @@ class Scanner extends EventEmitter {
   async _enableScan(camera) {
     this._camera = camera || this._camera;
     if (!this._camera) {
-      return false;
+      throw new Exception('Camera is not defined.');
     }
 
-    try {
-      let streamUrl = await this._camera.start();
-      this.video.src = streamUrl;
-      this._scan = new ActiveScan(this, this.analyzer, this.captureImage, this.scanPeriod, this.refractoryPeriod);
-      this._scan.start();
-    } catch (err) {
-      this.emit('error', err);
-      return false;
-    }
+    let streamUrl = await this._camera.start();
+    this.video.src = streamUrl;
+    this._scan = new ActiveScan(this, this.analyzer, this.captureImage, this.scanPeriod, this.refractoryPeriod);
+    this._scan.start();
+    this.emit('active');
   }
 
   _disableScan() {

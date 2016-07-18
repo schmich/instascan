@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.9.1",
-    "javascript-state-machine": "^2.3.5",
+    "fsm-as-promised": "^0.13.0",
     "visibilityjs": "^1.2.3",
     "webrtc-adapter": "^1.4.0"
   }
