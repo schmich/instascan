@@ -5,38 +5,38 @@ const StateMachine = require('fsm-as-promised');
 
 class ActiveScan {
   constructor(emitter, analyzer, captureImage, scanPeriod, refractoryPeriod) {
-    this.active = false;
     this.scanPeriod = scanPeriod;
-    this.frameCount = 0;
-    this.emitter = emitter;
-    this.analyzer = analyzer;
     this.captureImage = captureImage;
     this.refractoryPeriod = refractoryPeriod;
+    this._emitter = emitter;
+    this._frameCount = 0;
+    this._analyzer = analyzer;
+    this._active = false;
   }
 
   start() {
-    this.active = true;
+    this._active = true;
     requestAnimationFrame(() => this._scan());
   }
 
   stop() {
-    this.active = false;
+    this._active = false;
   }
 
   _scan() {
-    if (!this.active) {
+    if (!this._active) {
       return;
     }
 
     requestAnimationFrame(() => this._scan());
 
-    if (++this.frameCount !== this.scanPeriod) {
+    if (++this._frameCount !== this.scanPeriod) {
       return;
     } else {
-      this.frameCount = 0;
+      this._frameCount = 0;
     }
 
-    let analysis = this.analyzer.analyze();
+    let analysis = this._analyzer.analyze();
     if (!analysis) {
       return;
     }
@@ -55,7 +55,7 @@ class ActiveScan {
 
     this.lastResult = result;
     setTimeout(() => {
-      this.emitter.emit('scan', result, image);
+      this._emitter.emit('scan', result, image);
     }, 0);
   }
 }
@@ -137,28 +137,16 @@ class Scanner extends EventEmitter {
   constructor(opts) {
     super();
 
-    this._scan = null;
-    this._camera = null;
-    this.scanPeriod = opts.scanPeriod || 1;
-    this.refractoryPeriod = opts.refractoryPeriod || (5 * 1000);
-    this.captureImage = opts.captureImage || false;
-    this.backgroundScan = opts.backgroundScan || false;
     this.video = this._configureVideo(opts);
-    this.analyzer = new Analyzer(this.video);
+    this.backgroundScan = opts.backgroundScan || false;
+    this._analyzer = new Analyzer(this.video);
+    this._camera = null;
 
-    Visibility.change((e, state) => {
-      if (state === 'visible') {
-        setTimeout(() => {
-          if (this._fsm.can('activate')) {
-            this._fsm.activate();
-          }
-        }, 0);
-      } else {
-        if (!this.backgroundScan && this._fsm.can('deactivate')) {
-          this._fsm.deactivate();
-        }
-      }
-    });
+    let captureImage = opts.captureImage || false;
+    let scanPeriod = opts.scanPeriod || 1;
+    let refractoryPeriod = opts.refractoryPeriod || (5 * 1000);
+
+    this._scan = new ActiveScan(this, this._analyzer, captureImage, scanPeriod, refractoryPeriod);
 
     this._fsm = StateMachine.create({
       initial: 'stopped',
@@ -206,6 +194,20 @@ class Scanner extends EventEmitter {
       }
     });
 
+    Visibility.change((e, state) => {
+      if (state === 'visible') {
+        setTimeout(() => {
+          if (this._fsm.can('activate')) {
+            this._fsm.activate();
+          }
+        }, 0);
+      } else {
+        if (!this.backgroundScan && this._fsm.can('deactivate')) {
+          this._fsm.deactivate();
+        }
+      }
+    });
+
     this.emit('inactive');
   }
 
@@ -224,6 +226,30 @@ class Scanner extends EventEmitter {
     }
   }
 
+  set captureImage(capture) {
+    this._scan.captureImage = capture;
+  }
+
+  get captureImage() {
+    return this._scan.captureImage;
+  }
+
+  set scanPeriod(period) {
+    this._scan.scanPeriod = period;
+  }
+
+  get scanPeriod() {
+    return this._scan.scanPeriod;
+  }
+
+  set refractoryPeriod(period) {
+    this._scan.refractoryPeriod = period;
+  }
+
+  get refractoryPeriod() {
+    return this._scan.refractoryPeriod;
+  }
+
   async _enableScan(camera) {
     this._camera = camera || this._camera;
     if (!this._camera) {
@@ -232,7 +258,6 @@ class Scanner extends EventEmitter {
 
     let streamUrl = await this._camera.start();
     this.video.src = streamUrl;
-    this._scan = new ActiveScan(this, this.analyzer, this.captureImage, this.scanPeriod, this.refractoryPeriod);
     this._scan.start();
   }
 
@@ -241,7 +266,6 @@ class Scanner extends EventEmitter {
 
     if (this._scan) {
       this._scan.stop();
-      this._scan = null;
     }
 
     if (this._camera) {
