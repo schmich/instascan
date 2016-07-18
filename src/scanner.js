@@ -163,22 +163,42 @@ class Scanner extends EventEmitter {
     this._fsm = StateMachine.create({
       initial: 'stopped',
       events: [
-        { name: 'start', from: 'stopped', to: 'started' },
-        { name: 'stop', from: ['started', 'active', 'inactive'], to: 'stopped' },
-        { name: 'activate', from: ['started', 'inactive'], to: 'active' },
-        { name: 'deactivate', from: ['started', 'active'], to: 'inactive' }
+        {
+          name: 'start',
+          from: 'stopped',
+          to: 'started'
+        },
+        {
+          name: 'stop',
+          from: ['started', 'active', 'inactive'],
+          to: 'stopped'
+        },
+        {
+          name: 'activate',
+          from: ['started', 'inactive'],
+          to: ['active', 'inactive'],
+          condition: function (options) {
+            if (Visibility.state() === 'visible' || this.backgroundScan) {
+              return 'active';
+            } else {
+              return 'inactive';
+            }
+          }
+        },
+        {
+          name: 'deactivate',
+          from: ['started', 'active'],
+          to: 'inactive'
+        }
       ],
       callbacks: {
+        onenteractive: async (options) => {
+          await this._enableScan(options.args[0]);
+          this.emit('active');
+        },
         onleaveactive: () => {
           this._disableScan();
           this.emit('inactive');
-        },
-        onenteractive: async (options) => {
-          if (Visibility.state() !== 'visible' && !this.backgroundScan) {
-            return false;
-          }
-
-          return await this._enableScan(options.args[0]);
         },
         onenteredstarted: async (options) => {
           await this._fsm.activate(options.args[0]);
@@ -204,16 +224,6 @@ class Scanner extends EventEmitter {
     }
   }
 
-  //set camera(camera) {
-  async setCamera(camera) {
-    if (this._fsm.current === 'stopped' || this._fsm.current === 'inactive') {
-      this._camera = camera;
-    } else {
-      await this._fsm.stop();
-      await this._fsm.start(camera);
-    }
-  }
-
   async _enableScan(camera) {
     this._camera = camera || this._camera;
     if (!this._camera) {
@@ -224,7 +234,6 @@ class Scanner extends EventEmitter {
     this.video.src = streamUrl;
     this._scan = new ActiveScan(this, this.analyzer, this.captureImage, this.scanPeriod, this.refractoryPeriod);
     this._scan.start();
-    this.emit('active');
   }
 
   _disableScan() {
