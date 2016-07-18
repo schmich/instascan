@@ -138,6 +138,7 @@ class Scanner extends EventEmitter {
     super();
 
     this.video = this._configureVideo(opts);
+    this.mirror = (opts.mirror !== false);
     this.backgroundScan = opts.backgroundScan || false;
     this._analyzer = new Analyzer(this.video);
     this._camera = null;
@@ -250,6 +251,30 @@ class Scanner extends EventEmitter {
     return this._scan.refractoryPeriod;
   }
 
+  set mirror(mirror) {
+    this._mirror = mirror;
+
+    if (mirror) {
+      this.video.style.MozTransform = 'scaleX(-1)';
+      this.video.style.webkitTransform = 'scaleX(-1)';
+      this.video.style.OTransform = 'scaleX(-1)';
+      this.video.style.msFilter = 'FlipH';
+      this.video.style.filter = 'FlipH';
+      this.video.style.transform = 'scaleX(-1)';
+    } else {
+      this.video.style.MozTransform = null;
+      this.video.style.webkitTransform = null;
+      this.video.style.OTransform = null;
+      this.video.style.msFilter = null;
+      this.video.style.filter = null;
+      this.video.style.transform = null;
+    }
+  }
+
+  get mirror() {
+    return this._mirror;
+  }
+
   async _enableScan(camera) {
     this._camera = camera || this._camera;
     if (!this._camera) {
@@ -282,15 +307,6 @@ class Scanner extends EventEmitter {
 
     var video = opts.video || document.createElement('video');
     video.setAttribute('autoplay', 'autoplay');
-
-    if (opts.mirror !== false && opts.video) {
-      video.style.MozTransform = 'scaleX(-1)';
-      video.style.webkitTransform = 'scaleX(-1)';
-      video.style.OTransform = 'scaleX(-1)';
-      video.style.msFilter = 'FlipH';
-      video.style.filter = 'FlipH';
-      video.style.transform = 'scaleX(-1)';
-    }
 
     return video;
   }
