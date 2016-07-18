@@ -3,7 +3,7 @@ const ZXing = require('./zxing')();
 const Visibility = require('visibilityjs');
 const StateMachine = require('fsm-as-promised');
 
-class ActiveScan {
+class ScanProvider {
   constructor(emitter, analyzer, captureImage, scanPeriod, refractoryPeriod) {
     this.scanPeriod = scanPeriod;
     this.captureImage = captureImage;
@@ -11,6 +11,7 @@ class ActiveScan {
     this._emitter = emitter;
     this._frameCount = 0;
     this._analyzer = analyzer;
+    this._lastResult = null;
     this._active = false;
   }
 
@@ -21,6 +22,42 @@ class ActiveScan {
 
   stop() {
     this._active = false;
+  }
+
+  scan() {
+    return this._analyze(false);
+  }
+
+  _analyze(skipDups) {
+    let analysis = this._analyzer.analyze();
+    if (!analysis) {
+      return null;
+    }
+
+    let { result, canvas } = analysis;
+    if (!result) {
+      return null;
+    }
+
+    if (skipDups && result === this._lastResult) {
+      return null;
+    }
+
+    clearTimeout(this.refractoryTimeout);
+    this.refractoryTimeout = setTimeout(() => {
+      this._lastResult = null;
+    }, this.refractoryPeriod);
+
+    let image = this.captureImage ? canvas.toDataURL('image/webp', 0.8) : null;
+
+    this._lastResult = result;
+
+    let payload = { content: result };
+    if (image) {
+      payload.image = image;
+    }
+
+    return payload;
   }
 
   _scan() {
@@ -36,27 +73,12 @@ class ActiveScan {
       this._frameCount = 0;
     }
 
-    let analysis = this._analyzer.analyze();
-    if (!analysis) {
-      return;
+    let result = this._analyze(true);
+    if (result) {
+      setTimeout(() => {
+        this._emitter.emit('scan', result.content, result.image || null);
+      }, 0);
     }
-
-    let { result, canvas } = analysis;
-    if (!result || result === this.lastResult) {
-      return;
-    }
-
-    clearTimeout(this.refractoryTimeout);
-    this.refractoryTimeout = setTimeout(() => {
-      this.lastResult = null;
-    }, this.refractoryPeriod);
-
-    let image = this.captureImage ? canvas.toDataURL('image/webp', 0.8) : null;
-
-    this.lastResult = result;
-    setTimeout(() => {
-      this._emitter.emit('scan', result, image);
-    }, 0);
   }
 }
 
@@ -140,6 +162,7 @@ class Scanner extends EventEmitter {
     this.video = this._configureVideo(opts);
     this.mirror = (opts.mirror !== false);
     this.backgroundScan = opts.backgroundScan || false;
+    this._continuous = (opts.continuous !== false);
     this._analyzer = new Analyzer(this.video);
     this._camera = null;
 
@@ -147,7 +170,7 @@ class Scanner extends EventEmitter {
     let scanPeriod = opts.scanPeriod || 1;
     let refractoryPeriod = opts.refractoryPeriod || (5 * 1000);
 
-    this._scan = new ActiveScan(this, this._analyzer, captureImage, scanPeriod, refractoryPeriod);
+    this._scanner = new ScanProvider(this, this._analyzer, captureImage, scanPeriod, refractoryPeriod);
     this._fsm = this._createStateMachine();
 
     Visibility.change((e, state) => {
@@ -167,6 +190,10 @@ class Scanner extends EventEmitter {
     this.emit('inactive');
   }
 
+  scan() {
+    return this._scanner.scan();
+  }
+
   async start(camera = null) {
     if (this._fsm.can('start')) {
       await this._fsm.start(camera);
@@ -183,27 +210,41 @@ class Scanner extends EventEmitter {
   }
 
   set captureImage(capture) {
-    this._scan.captureImage = capture;
+    this._scanner.captureImage = capture;
   }
 
   get captureImage() {
-    return this._scan.captureImage;
+    return this._scanner.captureImage;
   }
 
   set scanPeriod(period) {
-    this._scan.scanPeriod = period;
+    this._scanner.scanPeriod = period;
   }
 
   get scanPeriod() {
-    return this._scan.scanPeriod;
+    return this._scanner.scanPeriod;
   }
 
   set refractoryPeriod(period) {
-    this._scan.refractoryPeriod = period;
+    this._scanner.refractoryPeriod = period;
   }
 
   get refractoryPeriod() {
-    return this._scan.refractoryPeriod;
+    return this._scanner.refractoryPeriod;
+  }
+
+  set continuous(continuous) {
+    this._continuous = continuous;
+
+    if (continuous && this._fsm.current === 'active') {
+      this._scanner.start();
+    } else {
+      this._scanner.stop();
+    }
+  }
+
+  get continuous() {
+    return this._continuous;
   }
 
   set mirror(mirror) {
@@ -238,14 +279,17 @@ class Scanner extends EventEmitter {
 
     let streamUrl = await this._camera.start();
     this.video.src = streamUrl;
-    this._scan.start();
+
+    if (this._continuous) {
+      this._scanner.start();
+    }
   }
 
   _disableScan() {
     this.video.src = '';
 
-    if (this._scan) {
-      this._scan.stop();
+    if (this._scanner) {
+      this._scanner.stop();
     }
 
     if (this._camera) {
