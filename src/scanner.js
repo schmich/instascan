@@ -204,19 +204,20 @@ class Scanner extends EventEmitter {
     }
   }
 
-  set camera(camera) {
+  //set camera(camera) {
+  async setCamera(camera) {
     if (this._fsm.current === 'stopped' || this._fsm.current === 'inactive') {
       this._camera = camera;
     } else {
-      this._fsm.stop();
-      this._fsm.start(camera);
+      await this._fsm.stop();
+      await this._fsm.start(camera);
     }
   }
 
   async _enableScan(camera) {
     this._camera = camera || this._camera;
     if (!this._camera) {
-      throw new Exception('Camera is not defined.');
+      throw new Error('Camera is not defined.');
     }
 
     let streamUrl = await this._camera.start();
@@ -242,7 +243,7 @@ class Scanner extends EventEmitter {
   _configureVideo(opts) {
     if (opts.video) {
       if (opts.video.tagName !== 'VIDEO') {
-        throw new Exception('Video must be a <video> element.');
+        throw new Error('Video must be a <video> element.');
       }
     }
 
