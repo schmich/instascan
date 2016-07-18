@@ -1,6 +1,24 @@
 # Instascan
 Webcam-driven HTML5 QR code scanner.
 
+## Installing
+
+### NPM
+
+`npm install --save instascan`
+
+```javascript
+var Instascan = require('instascan');
+```
+
+### Minified
+
+Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan/releases) page and include with
+
+```html
+<script type="text/javascript" src="instascan.min.js"></script>
+```
+
 ## Example
 
 ```html
@@ -8,7 +26,7 @@ Webcam-driven HTML5 QR code scanner.
 <html>
   <head>
     <title>Instascan</title>
-    <script type="text/javascript" src="dist/instascan.min.js"></script>
+    <script type="text/javascript" src="instascan.min.js"></script>
   </head>
   <body>
     <video id="preview"></video>
