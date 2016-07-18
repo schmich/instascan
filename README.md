@@ -11,9 +11,9 @@ Webcam-driven HTML5 QR code scanner.
     <script type="text/javascript" src="dist/instascan.min.js"></script>
   </head>
   <body>
-    <video id="monitor"></video>
+    <video id="preview"></video>
     <script type="text/javascript">
-      var scanner = new Instascan.Scanner({ monitor: document.getElementById('monitor') });
+      var scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
       scanner.addListener('scan', function (content, image) {
         console.log(content);
       });
@@ -33,7 +33,7 @@ Webcam-driven HTML5 QR code scanner.
 ### `new Instascan.Scanner(opts)`
 
 - Create a new scanner with options.
-- `opts.monitor`: The HTML element to use for the camera's video preview. Must be a `<video>` element. By default, an invisible element will be created to host the video.
+- `opts.video`: The HTML element to use for the camera's video preview. Must be a `<video>` element. By default, an invisible element will be created to host the video.
 - `opts.mirror`: Whether to horizontally mirror the video preview. This is helpful when trying to scan a QR code with a user-facing camera. Default `true`.
 - `opts.backgroundScan`: Whether to actively scan when the tab is not active. When `false`, this reduces CPU usage when the tab is not active. Default `false`.
 - `opts.refractoryPeriod`: The period, in milliseconds, before the same QR code will be recognized in succession. Default `5000`.

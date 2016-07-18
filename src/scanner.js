@@ -240,16 +240,16 @@ class Scanner extends EventEmitter {
   }
 
   _configureVideo(opts) {
-    if (opts.monitor) {
-      if (opts.monitor.tagName !== 'VIDEO') {
-        throw new Exception('Monitor must be a <video> element.');
+    if (opts.video) {
+      if (opts.video.tagName !== 'VIDEO') {
+        throw new Exception('Video must be a <video> element.');
       }
     }
 
-    var video = opts.monitor || document.createElement('video');
+    var video = opts.video || document.createElement('video');
     video.setAttribute('autoplay', 'autoplay');
 
-    if (opts.mirror !== false && opts.monitor) {
+    if (opts.mirror !== false && opts.video) {
       video.style.MozTransform = 'scaleX(-1)';
       video.style.webkitTransform = 'scaleX(-1)';
       video.style.OTransform = 'scaleX(-1)';
