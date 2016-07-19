@@ -3,6 +3,8 @@ Real-time webcam-driven HTML5 QR code scanner.
 
 ## Installing
 
+*Note:* Chrome requires HTTPS when using the WebRTC API. Any pages using this library should be served over HTTPS.
+
 ### NPM
 
 `npm install --save instascan`
