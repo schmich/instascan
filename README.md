@@ -1,5 +1,5 @@
 # Instascan
-Webcam-driven HTML5 QR code scanner.
+Real-time webcam-driven HTML5 QR code scanner.
 
 ## Installing
 
@@ -112,9 +112,31 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 - Camera name, including manufacturer and model, e.g. "Microsoft Lifecam HD-3000".
 - Can be `null` if the user has not yet allowed camera access, e.g. on first launch of the app.
 
+## Performance
+
+Many factors affect how quickly and reliably Instascan can detect QR codes.
+
+If you control creation of the QR code, consider the following:
+
+- A larger physical code is better. A 2" square code is better than a 1" square code.
+- Flat, smooth, matte surfaces are better than curved, rough, glossy surfaces.
+- Include a sufficient quiet zone, the white border surrounding QR code. The quiet zone should be at least four times the width of an individual element in your QR code.
+- A simpler code is better. You can use [this QR code generator](https://www.the-qrcode-generator.com/) to see how your input affects complexity.
+- For the same length, numeric content is simpler than ASCII content, which is simpler than Unicode content.
+- Shorter content is simpler. If you're encoding a URL, consider using a shortener such as [goo.gl](https://goo.gl/) or [bit.ly](https://bitly.com/).
+
+When scanning, consider the following:
+
+- QR code orientation doesn't matter.
+- Higher resolution video is better, but is more CPU intensive.
+- Direct, orthogonal scanning is better than scanning at an angle.
+- Blurry video greatly reduces scanner performance.
+- Auto-focus can cause lags in detection as the camera adjusts focus. Consider disabling it or using a fixed-focus camera with the subject positioned at the focal point.
+- Exposure adjustment on cameras can cause lags in detection. Consider disabling it or having a fixed white backdrop.
+
 ## Compatibility
 
-Instascan works with any browser that [supports the getUserMedia API](http://caniuse.com/#feat=stream), which currently includes Chome, Firefox, Opera, and Edge. IE and Safari are not supported.
+Instascan works with [any browser that supports the getUserMedia API](http://caniuse.com/#feat=stream), which currently includes Chome, Firefox, Opera, and Edge. IE and Safari are not supported.
 
 ## Credits
 
