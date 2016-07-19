@@ -21,7 +21,8 @@
     "response",
     "scan",
     "scanner",
-    "webcam"
+    "webcam",
+    "realtime"
   ],
   "author": "Chris Schmich <schmch@gmail.com>",
   "license": "MIT",
