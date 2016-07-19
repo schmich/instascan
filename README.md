@@ -112,6 +112,10 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 - Camera name, including manufacturer and model, e.g. "Microsoft Lifecam HD-3000".
 - Can be `null` if the user has not yet allowed camera access, e.g. on first launch of the app.
 
+## Compatibility
+
+Instascan works with [any browser that supports the getUserMedia API](http://caniuse.com/#feat=stream), which currently includes Chome, Firefox, Opera, and Edge. IE and Safari are not supported.
+
 ## Performance
 
 Many factors affect how quickly and reliably Instascan can detect QR codes.
@@ -142,10 +146,6 @@ When scanning, consider the following:
 - White paper backdrop to mitigate exposure adjustment.
 
 ![Setup](https://raw.githubusercontent.com/schmich/instascan/master/assets/setup.jpg)
-
-## Compatibility
-
-Instascan works with [any browser that supports the getUserMedia API](http://caniuse.com/#feat=stream), which currently includes Chome, Firefox, Opera, and Edge. IE and Safari are not supported.
 
 ## Credits
 
