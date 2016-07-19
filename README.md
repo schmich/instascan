@@ -104,11 +104,13 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 
 ### camera.id
 
-- Unique camera ID. Assigned by the browser.
+- Unique camera ID provided by the browser.
+- These IDs are stable and can be persisted across instances of your application (e.g. in localStorage).
 
 ### camera.name
 
-- Camera name, including manufacturer and model, e.g. "Microsoft Lifecam HD-3000". Can be `null` if the user has not yet allowed camera access, e.g. on first launch of the app.
+- Camera name, including manufacturer and model, e.g. "Microsoft Lifecam HD-3000".
+- Can be `null` if the user has not yet allowed camera access, e.g. on first launch of the app.
 
 ## Compatibility
 
