@@ -13,6 +13,10 @@ Real-time webcam-driven HTML5 QR code scanner.
 var Instascan = require('instascan');
 ```
 
+### Bower
+
+Pending. [Drop a note](https://github.com/schmich/instascan/issues/31) if you need Bower support.
+
 ### Minified
 
 Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan/releases) page and load with:
@@ -79,7 +83,7 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 - QR codes recognized with this method are not raised via the `scan` event.
 - If no QR code is detected, `result` is `null`.
 - `result.content`: Scanned content decoded from the QR code.
-- `result.image`: Not defined if [`scanner.captureImage`](#var-scanner--new-instascanscanneropts) is `false`, otherwise, see the [`scan`](#scanneraddlistenerscan-callback) event for format.
+- `result.image`: Undefined if [`scanner.captureImage`](#var-scanner--new-instascanscanneropts) is `false`, otherwise, see the [`scan`](#scanneraddlistenerscan-callback) event for format.
 
 ### scanner.addListener('scan', callback)
 
