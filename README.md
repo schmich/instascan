@@ -58,7 +58,7 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 
 - Create a new scanner with options.
 - `opts.continuous`: Whether to scan continuously for QR codes. If `false`, use [`scanner.scan`](#var-result--scannerscan) to manually scan. Default `true`.
-- `opts.video`: The HTML element to use for the camera's video preview. Must be a `<video>` element. By default, an invisible element will be created to host the video.
+- `opts.video`: The HTML element to use for the camera's video preview. Must be a `<video>` element. When the camera is active, this element will have the `active` CSS class, otherwise, it will have the `inactive` class. By default, an invisible element will be created to host the video.
 - `opts.mirror`: Whether to horizontally mirror the video preview. This is helpful when trying to scan a QR code with a user-facing camera. Default `true`.
 - `opts.captureImage`: Whether to include the scanned image data as part of the scan result. See the `scan` event for format details. Default `false`.
 - `opts.backgroundScan`: Only applies to continuous mode. Whether to actively scan when the tab is not active. When `false`, this reduces CPU usage when the tab is not active. Default `false`.
@@ -95,11 +95,13 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 ### scanner.addListener('active', callback)
 
 - Raised when the scanner becomes active as the result of [`scanner.start`](#scannerstartcamera) or the tab gaining focus.
+- If `opts.video` element was specified, it will have the `active` CSS class.
 - `callback`: `function ()`
 
 ### scanner.addListener('inactive', callback)
 
 - Raised when the scanner becomes inactive as the result of [`scanner.stop`](#scannerstop) or the tab losing focus.
+- If `opts.video` element was specified, it will have the `inactive` CSS class.
 - `callback`: `function ()`
 
 ### Instascan.Camera.getCameras()
