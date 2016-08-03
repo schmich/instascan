@@ -138,7 +138,8 @@ class Analyzer {
 
     let data = this.canvasContext.getImageData(0, 0, this.sensorWidth, this.sensorHeight).data;
     for (var i = 0, j = 0; i < data.length; i += 4, j++) {
-      ZXing.HEAPU8[this.imageBuffer + j] = data[i];
+      let [r, g, b] = [data[i], data[i + 1], data[i + 2]];
+      ZXing.HEAPU8[this.imageBuffer + j] = Math.trunc((r + g + b) / 3);
     }
 
     let err = ZXing._decode_qr(this.decodeCallback);
