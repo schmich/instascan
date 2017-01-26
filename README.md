@@ -10,7 +10,7 @@ Real-time webcam-driven HTML5 QR code scanner.
 `npm install --save instascan`
 
 ```javascript
-var Instascan = require('instascan');
+const Instascan = require('instascan');
 ```
 
 ### Bower
@@ -37,7 +37,7 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
   <body>
     <video id="preview"></video>
     <script type="text/javascript">
-      var scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
       scanner.addListener('scan', function (content, image) {
         console.log(content);
       });
@@ -54,10 +54,10 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 
 ## API
 
-### var scanner = new Instascan.Scanner(opts)
+### let scanner = new Instascan.Scanner(opts)
 
 - Create a new scanner with options.
-- `opts.continuous`: Whether to scan continuously for QR codes. If `false`, use [`scanner.scan`](#var-result--scannerscan) to manually scan. Default `true`.
+- `opts.continuous`: Whether to scan continuously for QR codes. If `false`, use [`scanner.scan`](#let-result--scannerscan) to manually scan. Default `true`.
 - `opts.video`: The HTML element to use for the camera's video preview. Must be a `<video>` element. When the camera is active, this element will have the `active` CSS class, otherwise, it will have the `inactive` class. By default, an invisible element will be created to host the video.
 - `opts.mirror`: Whether to horizontally mirror the video preview. This is helpful when trying to scan a QR code with a user-facing camera. Default `true`.
 - `opts.captureImage`: Whether to include the scanned image data as part of the scan result. See the `scan` event for format details. Default `false`.
@@ -68,7 +68,7 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 ### scanner.start(camera)
 
 - Activate `camera` and start scanning using it as the source. Returns promise.
-- This must be called in order to use [`scanner.scan`](#var-result--scannerscan) or receive [`scan`](#scanneraddlistenerscan-callback) events.
+- This must be called in order to use [`scanner.scan`](#let-result--scannerscan) or receive [`scan`](#scanneraddlistenerscan-callback) events.
 - `camera`: Instance of `Instascan.Camera` from [`Instascan.Camera.getCameras`](#instascancameragetcameras).
 - Continuation: `function ()`, called when camera is active and scanning has started.
 
@@ -77,20 +77,20 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 - Stop scanning and deactivate the camera. Returns promise.
 - Continuation: `function ()`, called when camera and scanning have stopped.
 
-### var result = scanner.scan()
+### let result = scanner.scan()
 
 - Scan video immediately for a QR code.
 - QR codes recognized with this method are not raised via the `scan` event.
 - If no QR code is detected, `result` is `null`.
 - `result.content`: Scanned content decoded from the QR code.
-- `result.image`: Undefined if [`scanner.captureImage`](#var-scanner--new-instascanscanneropts) is `false`, otherwise, see the [`scan`](#scanneraddlistenerscan-callback) event for format.
+- `result.image`: Undefined if [`scanner.captureImage`](#let-scanner--new-instascanscanneropts) is `false`, otherwise, see the [`scan`](#scanneraddlistenerscan-callback) event for format.
 
 ### scanner.addListener('scan', callback)
 
-- Raised when a QR code is scanned using the camera in continuous mode (see [`scanner.continuous`](#var-scanner--new-instascanscanneropts)).
+- Raised when a QR code is scanned using the camera in continuous mode (see [`scanner.continuous`](#let-scanner--new-instascanscanneropts)).
 - `callback`: `function (content, image)`
 - `content`: Scanned content decoded from the QR code.
-- `image`: `null` if [`scanner.captureImage`](#var-scanner--new-instascanscanneropts) is `false`, otherwise, a base64-encoded [WebP](https://en.wikipedia.org/wiki/WebP)-compressed data URI of the camera frame used to decode the QR code.
+- `image`: `null` if [`scanner.captureImage`](#let-scanner--new-instascanscanneropts) is `false`, otherwise, a base64-encoded [WebP](https://en.wikipedia.org/wiki/WebP)-compressed data URI of the camera frame used to decode the QR code.
 
 ### scanner.addListener('active', callback)
 
