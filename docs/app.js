@@ -2,7 +2,7 @@ var app = new Vue({
   el: '#app',
   data: {
     scanner: null,
-    activeCamera: null,
+    activeCameraId: null,
     cameras: [],
     scans: []
   },
@@ -15,16 +15,23 @@ var app = new Vue({
     Instascan.Camera.getCameras().then(function (cameras) {
       self.cameras = cameras;
       if (cameras.length > 0) {
-        self.activeCamera = cameras[0];
-        self.scanner.start(cameras[0]);
+        self.activeCameraId = cameras[0].id;
+        self.scanner.start(cameras[0]).then(function () {
+          return Instascan.Camera.getCameras();
+        }).then(function (cameras) {
+          self.cameras = cameras;
+        });
       } else {
         console.error('No cameras found.');
       }
     });
   },
   methods: {
+    formatName: function (name) {
+      return name || '(unknown)';
+    },
     selectCamera: function (camera) {
-      this.activeCamera = camera;
+      this.activeCameraId = camera.id;
       this.scanner.start(camera);
     }
   }
