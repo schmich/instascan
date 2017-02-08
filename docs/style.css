@@ -5,23 +5,24 @@ body, html {
   height: 100%;
 }
 #app {
-  background: #333;
+  background: #263238;
   display: flex;
   align-items: stretch;
   justify-content: stretch;
   height: 100%;
 }
 .sidebar {
-  background: #f3f3f3;
+  background: #eceff1;
   min-width: 250px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  overflow: auto;
 }
 .sidebar h2 {
   font-weight: normal;
   font-size: 1.0rem;
-  background: #03a9f4;
+  background: #607d8b;
   color: #fff;
   padding: 10px;
   margin: 0;
@@ -67,11 +68,10 @@ body, html {
   font-style: italic;
 }
 .preview-container {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  display: flex;
   width: 100%;
-  position: relative;
   overflow: hidden;
-}
-#preview {
-  min-width: 100%;
-  min-height: 100%;
 }
