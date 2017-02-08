@@ -1,0 +1,78 @@
+body, html {
+  padding: 0;
+  margin: 0;
+  font-family: 'Helvetica Neue', 'Calibri', Arial, sans-serif;
+  height: 100%;
+}
+#app {
+  background: #333;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  height: 100%;
+}
+.sidebar {
+  background: #f3f3f3;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.sidebar h2 {
+  font-weight: normal;
+  font-size: 1.0rem;
+  background: #03A9F4;
+  color: #01579B;
+  color: #fff;
+  padding: 10px;
+  margin: 0;
+}
+.sidebar ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.sidebar li {
+  line-height: 175%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-wrap: none;
+  text-overflow: ellipsis;
+}
+.cameras ul {
+  padding: 15px 20px;
+}
+.cameras .active {
+  font-weight: bold;
+  color: #009900;
+}
+.cameras a {
+  color: #555;
+  text-decoration: none;
+  cursor: pointer;
+}
+.cameras a:hover {
+  text-decoration: underline;
+}
+.scans li {
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc;
+}
+.scans-enter-active {
+  transition: background 3s;
+}
+.scans-enter {
+  background: yellow;
+}
+.empty {
+  font-style: italic;
+}
+.preview-container {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+#preview {
+  min-width: 100%;
+  min-height: 100%;
+}
