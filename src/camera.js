@@ -1,5 +1,5 @@
 function cameraName(label) {
-  var clean = label.replace(/\s*\([0-9a-f]+(:[0-9a-f]+)?\)\s*$/, '');
+  let clean = label.replace(/\s*\([0-9a-f]+(:[0-9a-f]+)?\)\s*$/, '');
   return clean || label || null;
 }
 
@@ -11,7 +11,7 @@ class Camera {
   }
 
   async start() {
-    var constraints = {
+    let constraints = {
       audio: false,
       video: {
         mandatory: {
@@ -41,7 +41,7 @@ class Camera {
   }
 
   static async getCameras() {
-    var devices = await navigator.mediaDevices.enumerateDevices();
+    let devices = await navigator.mediaDevices.enumerateDevices();
 
     return devices
       .filter(d => d.kind === 'videoinput')
