@@ -1,5 +1,5 @@
 # ![Instascan](https://raw.githubusercontent.com/schmich/instascan/master/assets/qr.png) Instascan
-Real-time webcam-driven HTML5 QR code scanner.
+Real-time webcam-driven HTML5 QR code scanner. [See demo here](https://schmich.github.io/instascan/).
 
 ## Installing
 
