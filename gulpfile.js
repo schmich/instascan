@@ -26,7 +26,7 @@ function build(file) {
     .pipe(source('instascan.js'));
 }
 
-gulp.task('dist', function () {
+gulp.task('release', function () {
   return build('./export.js')
     .pipe(buffer())
     .pipe(uglify())
