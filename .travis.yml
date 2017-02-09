@@ -1,0 +1,15 @@
+language: node_js
+  - '6'
+install: npm install
+script: gulp release
+env:
+  global:
+    - COMMIT_AUTHOR_NAME: "'Chris Schmich'"
+    - COMMIT_AUTHOR_EMAIL: 'schmch@gmail.com'
+    - ENCRYPTION_LABEL: 95f025fe7ce3
+deploy: 
+  provider: script
+  script: bash ./deploy/deploy.sh
+  skip_cleanup: true
+  on:
+    branch: master
