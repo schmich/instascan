@@ -38,7 +38,7 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
     <video id="preview"></video>
     <script type="text/javascript">
       let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
-      scanner.addListener('scan', function (content, image) {
+      scanner.addListener('scan', function (content) {
         console.log(content);
       });
       Instascan.Camera.getCameras().then(function (cameras) {
@@ -47,6 +47,8 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
         } else {
           console.error('No cameras found.');
         }
+      }).catch(function (e) {
+        console.error(e);
       });
     </script>
   </body>
