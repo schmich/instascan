@@ -73,45 +73,52 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 - Activate `camera` and start scanning using it as the source. Returns promise.
 - This must be called in order to use [`scanner.scan`](#let-result--scannerscan) or receive [`scan`](#scanneraddlistenerscan-callback) events.
 - `camera`: Instance of `Instascan.Camera` from [`Instascan.Camera.getCameras`](#instascancameragetcameras).
-- Continuation: `function ()`, called when camera is active and scanning has started.
-
+- `.then(function () { ... })`: called when camera is active and scanning has started.
+- `.catch(function (err) { ... })`
+  - Called when an error occurs trying to initialize the camera for scanning.
+  - `err`: An `Instascan.VideoAccessError` in the case of a known `getUserMedia` failure ([see error types](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Errors)).
+  
 ### scanner.stop()
 
 - Stop scanning and deactivate the camera. Returns promise.
-- Continuation: `function ()`, called when camera and scanning have stopped.
+- `.then(function () { ... })`: called when camera and scanning have stopped.
 
 ### let result = scanner.scan()
 
 - Scan video immediately for a QR code.
-- QR codes recognized with this method are not raised via the `scan` event.
+- QR codes recognized with this method are not emitted via the `scan` event.
 - If no QR code is detected, `result` is `null`.
 - `result.content`: Scanned content decoded from the QR code.
 - `result.image`: Undefined if [`scanner.captureImage`](#let-scanner--new-instascanscanneropts) is `false`, otherwise, see the [`scan`](#scanneraddlistenerscan-callback) event for format.
 
 ### scanner.addListener('scan', callback)
 
-- Raised when a QR code is scanned using the camera in continuous mode (see [`scanner.continuous`](#let-scanner--new-instascanscanneropts)).
+- Emitted when a QR code is scanned using the camera in continuous mode (see [`scanner.continuous`](#let-scanner--new-instascanscanneropts)).
 - `callback`: `function (content, image)`
-- `content`: Scanned content decoded from the QR code.
-- `image`: `null` if [`scanner.captureImage`](#let-scanner--new-instascanscanneropts) is `false`, otherwise, a base64-encoded [WebP](https://en.wikipedia.org/wiki/WebP)-compressed data URI of the camera frame used to decode the QR code.
+  - `content`: Scanned content decoded from the QR code.
+  - `image`: `null` if [`scanner.captureImage`](#let-scanner--new-instascanscanneropts) is `false`, otherwise, a base64-encoded [WebP](https://en.wikipedia.org/wiki/WebP)-compressed data URI of the camera frame used to decode the QR code.
 
 ### scanner.addListener('active', callback)
 
-- Raised when the scanner becomes active as the result of [`scanner.start`](#scannerstartcamera) or the tab gaining focus.
+- Emitted when the scanner becomes active as the result of [`scanner.start`](#scannerstartcamera) or the tab gaining focus.
 - If `opts.video` element was specified, it will have the `active` CSS class.
 - `callback`: `function ()`
 
 ### scanner.addListener('inactive', callback)
 
-- Raised when the scanner becomes inactive as the result of [`scanner.stop`](#scannerstop) or the tab losing focus.
+- Emitted when the scanner becomes inactive as the result of [`scanner.stop`](#scannerstop) or the tab losing focus.
 - If `opts.video` element was specified, it will have the `inactive` CSS class.
 - `callback`: `function ()`
 
 ### Instascan.Camera.getCameras()
 
 - Enumerate available video devices. Returns promise.
-- Continuation: `function (cameras)`, called when cameras are available.
-- `cameras`: Array of `Instascan.Camera` instances available for use.
+- `.then(function (cameras) { ... })`
+  - Called when cameras are available.
+  - `cameras`: Array of `Instascan.Camera` instances available for use.
+- `.catch(function (err) { ... })`
+  - Called when an error occurs while getting cameras.
+  - `err`: An `Instascan.VideoAccessError` in the case of a known `getUserMedia` failure ([see error types](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Errors)).
 
 ### camera.id
 
@@ -120,8 +127,8 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 
 ### camera.name
 
-- Camera name, including manufacturer and model, e.g. "Microsoft LifeCam HD-3000".
-- Can be `null` if the user has not yet allowed camera access, e.g. on first launch of the app.
+- Camera name, including manufacturer and model
+- e.g. "Microsoft LifeCam HD-3000".
 
 ## Compatibility
 
