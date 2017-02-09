@@ -29,5 +29,5 @@ fi
 
 git config user.name "$COMMIT_AUTHOR_NAME"
 git config user.email "$COMMIT_AUTHOR_EMAIL"
-git commit -a -m "Automatic deployment for $user/$project@${sha}."
+git commit -a -m "Automatic build for $user/$project@${sha}."
 git push "$repo" master
