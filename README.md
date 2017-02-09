@@ -76,7 +76,7 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 - `.then(function () { ... })`: called when camera is active and scanning has started.
 - `.catch(function (err) { ... })`
   - Called when an error occurs trying to initialize the camera for scanning.
-  - `err`: An `Instascan.VideoAccessError` in the case of a known `getUserMedia` failure ([see error types](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Errors)).
+  - `err`: An `Instascan.MediaError` in the case of a known `getUserMedia` failure ([see error types](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Errors)).
   
 ### scanner.stop()
 
@@ -118,7 +118,7 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
   - `cameras`: Array of `Instascan.Camera` instances available for use.
 - `.catch(function (err) { ... })`
   - Called when an error occurs while getting cameras.
-  - `err`: An `Instascan.VideoAccessError` in the case of a known `getUserMedia` failure ([see error types](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Errors)).
+  - `err`: An `Instascan.MediaError` in the case of a known `getUserMedia` failure ([see error types](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Errors)).
 
 ### camera.id
 

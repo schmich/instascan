@@ -3,7 +3,7 @@ function cameraName(label) {
   return clean || label || null;
 }
 
-class VideoAccessError extends Error {
+class MediaError extends Error {
   constructor(type) {
     super(`Cannot access video stream (${type}).`);
     this.type = type;
@@ -73,7 +73,7 @@ class Camera {
       return await fn();
     } catch (e) {
       if (e.name) {
-        throw new VideoAccessError(e.name);
+        throw new MediaError(e.name);
       } else {
         throw e;
       }
