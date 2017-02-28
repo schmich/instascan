@@ -159,7 +159,9 @@ let opts = {
 
 ## Compatibility
 
-Instascan works with [any browser that supports the getUserMedia API](http://caniuse.com/#feat=stream), which currently includes Chome, Firefox, Opera, and Edge. IE and Safari are not supported.
+Instascan works on non-iOS platforms in [any browser that supports the WebRTC/getUserMedia API](http://caniuse.com/#feat=stream), which currently includes Chome, Firefox, Opera, and Edge. IE and Safari are not supported.
+
+Instascan does not work on iOS since Apple does not yet support WebRTC in WebKit *and* forces other browser vendors (Chrome, Firefox, Opera) to use their implementation of WebKit. [Apple is actively working on WebRTC support in WebKit](https://bugs.webkit.org/show_bug.cgi?id=124288).
 
 ## Performance
 
