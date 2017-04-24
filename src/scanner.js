@@ -289,7 +289,7 @@ class Scanner extends EventEmitter {
     }
 
     let streamUrl = await this._camera.start();
-    this.video.src = streamUrl;
+    this.video.srcObject = streamUrl;
 
     if (this._continuous) {
       this._scanner.start();

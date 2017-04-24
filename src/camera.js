@@ -35,7 +35,7 @@ class Camera {
       return await navigator.mediaDevices.getUserMedia(constraints);
     });
 
-    return window.URL.createObjectURL(this._stream);
+    return this._stream;
   }
 
   stop() {
