@@ -82,8 +82,8 @@ let opts = {
   captureImage: false,
   
   // Only applies to continuous mode. Whether to actively scan when the tab is not active.
-  // When false, this reduces CPU usage when the tab is not active. Default false.
-  backgroundScan: false,
+  // When false, this reduces CPU usage when the tab is not active. Default true.
+  backgroundScan: true,
   
   // Only applies to continuous mode. The period, in milliseconds, before the same QR code
   // will be recognized in succession. Default 5000 (5 seconds).

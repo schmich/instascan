@@ -162,7 +162,7 @@ class Scanner extends EventEmitter {
 
     this.video = this._configureVideo(opts);
     this.mirror = (opts.mirror !== false);
-    this.backgroundScan = opts.backgroundScan || false;
+    this.backgroundScan = (opts.backgroundScan !== false);
     this._continuous = (opts.continuous !== false);
     this._analyzer = new Analyzer(this.video);
     this._camera = null;
