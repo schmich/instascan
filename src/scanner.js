@@ -288,8 +288,8 @@ class Scanner extends EventEmitter {
       throw new Error('Camera is not defined.');
     }
 
-    let streamUrl = await this._camera.start();
-    this.video.srcObject = streamUrl;
+    let stream = await this._camera.start();
+    this.video.srcObject = stream;
 
     if (this._continuous) {
       this._scanner.start();
