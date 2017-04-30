@@ -200,6 +200,5 @@ Powered by the [Emscripten JavaScript build](https://github.com/kig/zxing-cpp-em
 
 ## License
 
-Copyright &copy; 2016 Chris Schmich
-<br />
+Copyright &copy; 2016 Chris Schmich  
 MIT License. See [LICENSE](LICENSE) for details.
