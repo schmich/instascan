@@ -20,7 +20,11 @@ function build(file) {
     .transform(babelify, {
       ignore: /zxing\.js$/i,
       presets: ['es2015'],
-      plugins: ['syntax-async-functions', 'transform-regenerator']
+      plugins: [
+        'syntax-async-functions',
+        'transform-regenerator',
+        'transform-runtime'
+      ]
     })
     .bundle()
     .pipe(source('instascan.js'));
