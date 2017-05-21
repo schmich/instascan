@@ -97,8 +97,8 @@ class Analyzer {
     this.canvasContext = null;
 
     this.decodeCallback = ZXing.Runtime.addFunction(function (ptr, len, resultIndex, resultCount) {
-      var result = new Uint8Array(ZXing.HEAPU8.buffer, ptr, len);
-      var str = String.fromCharCode.apply(null, result);
+      let result = new Uint8Array(ZXing.HEAPU8.buffer, ptr, len);
+      let str = String.fromCharCode.apply(null, result);
       if (resultIndex === 0) {
         window.zxDecodeResult = '';
       }
@@ -137,7 +137,7 @@ class Analyzer {
     );
 
     let data = this.canvasContext.getImageData(0, 0, this.sensorWidth, this.sensorHeight).data;
-    for (var i = 0, j = 0; i < data.length; i += 4, j++) {
+    for (let i = 0, j = 0; i < data.length; i += 4, j++) {
       let [r, g, b] = [data[i], data[i + 1], data[i + 2]];
       ZXing.HEAPU8[this.imageBuffer + j] = Math.trunc((r + g + b) / 3);
     }
@@ -162,7 +162,7 @@ class Scanner extends EventEmitter {
 
     this.video = this._configureVideo(opts);
     this.mirror = (opts.mirror !== false);
-    this.backgroundScan = opts.backgroundScan || false;
+    this.backgroundScan = (opts.backgroundScan !== false);
     this._continuous = (opts.continuous !== false);
     this._analyzer = new Analyzer(this.video);
     this._camera = null;
@@ -288,8 +288,8 @@ class Scanner extends EventEmitter {
       throw new Error('Camera is not defined.');
     }
 
-    let streamUrl = await this._camera.start();
-    this.video.src = streamUrl;
+    let stream = await this._camera.start();
+    this.video.srcObject = stream;
 
     if (this._continuous) {
       this._scanner.start();
@@ -315,7 +315,7 @@ class Scanner extends EventEmitter {
       }
     }
 
-    var video = opts.video || document.createElement('video');
+    let video = opts.video || document.createElement('video');
     video.setAttribute('autoplay', 'autoplay');
 
     return video;
