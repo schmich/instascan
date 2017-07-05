@@ -46,6 +46,6 @@
     "babel-polyfill": "^6.9.1",
     "fsm-as-promised": "^0.13.0",
     "visibilityjs": "^1.2.3",
-    "webrtc-adapter": "^1.4.0"
+    "webrtc-adapter": "^4.1.0"
   }
 }
