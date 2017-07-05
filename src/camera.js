@@ -51,8 +51,6 @@ class Camera {
   }
 
   static async getCameras() {
-    await this._ensureAccess();
-
     let devices = await navigator.mediaDevices.enumerateDevices();
     return devices
       .filter(d => d.kind === 'videoinput')
