@@ -1,18 +1,15 @@
 {
   "name": "instascan",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Webcam-driven QR code scanner.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel --plugins transform-runtime --no-babelrc src --out-dir lib --presets=env"
   },
-  "files": [
-    "src/",
-    "index.js"
-  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/schmich/instascan.git"
+    "url": "git+https://github.com/pakokrew/instascan.git"
   },
   "keywords": [
     "qr",
@@ -31,11 +28,7 @@
   },
   "homepage": "https://github.com/schmich/instascan",
   "devDependencies": {
-    "babel-plugin-syntax-async-functions": "^6.8.0",
-    "babel-plugin-transform-regenerator": "^6.9.0",
-    "babel-preset-es2015": "^6.9.0",
-    "babelify": "^7.3.0",
-    "browserify": "^13.0.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.5.4",
@@ -43,8 +36,11 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
-    "babel-polyfill": "^6.9.1",
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-runtime": "^6.23.0",
     "fsm-as-promised": "^0.13.0",
+    "regenerator-runtime": "^0.10.5",
     "visibilityjs": "^1.2.3",
     "webrtc-adapter": "^1.4.0"
   }
