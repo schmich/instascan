@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pakokrew/instascan.git"
+    "url": "git+https://github.com/schmich/instascan.git"
   },
   "keywords": [
     "qr",
