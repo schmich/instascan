@@ -44,8 +44,5 @@
     "babel-runtime": "^6.26.0",
     "fsm-as-promised": "^0.14.5",
     "visibilityjs": "^1.2.4"
-  },
-  "peerDependencies": {
-    "webrtc-adapter": "^5.0.4"
   }
 }
