@@ -48,7 +48,7 @@ gulp.task('build', ['build-package'], function () {
     .pipe(gulp.dest('./dist/'));
 });
 
-gulp.task('release', ['build', 'build-package'], function () {
+gulp.task('release', ['build-package'], function () {
   return build('./export.js')
     .pipe(buffer())
     .pipe(uglify())
