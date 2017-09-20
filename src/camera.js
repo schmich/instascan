@@ -48,20 +48,21 @@ class Camera {
     await this._ensureAccess();
 
     let devices = await navigator.mediaDevices.enumerateDevices();
+
     return devices
       .filter(d => d.kind === 'videoinput')
       .map(d => new Camera(d.deviceId, cameraName(d.label)));
   }
 
   static async _ensureAccess() {
-    return await this._wrapErrors(async () => {
-      let access = await navigator.mediaDevices.getUserMedia({ video: true });
+    return this._wrapErrors(async () => {
+      await navigator.mediaDevices.getUserMedia({ video: true });
     });
   }
 
   static async _wrapErrors(fn) {
     try {
-      return await fn();
+      return fn();
     } catch (e) {
       if (e.name) {
         throw new MediaError(e.name);
