@@ -56,9 +56,6 @@ class Camera {
   static async _ensureAccess() {
     return await this._wrapErrors(async () => {
       let access = await navigator.mediaDevices.getUserMedia({ video: true });
-      for (let stream of access.getVideoTracks()) {
-        stream.stop();
-      }
     });
   }
 
