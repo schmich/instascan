@@ -44,7 +44,7 @@ gulp.task('build-package', function () {
 });
 
 gulp.task('build', ['build-package'], function () {
-  return build('./src/index.js')
+  return build('./export.js')
     .pipe(gulp.dest('./dist/'));
 });
 
