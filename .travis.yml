@@ -1,7 +1,7 @@
 language: node_js
   - '6'
 install: npm install
-script: gulp release
+script: node_modules/.bin/gulp release
 env:
   global:
     - COMMIT_AUTHOR_NAME: "'Chris Schmich'"

@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const ZXing = require('./zxing')();
+const ZXing = require('./vendor/zxing')();
 const Visibility = require('visibilityjs');
 const StateMachine = require('fsm-as-promised');
 
@@ -316,7 +316,10 @@ class Scanner extends EventEmitter {
     }
 
     let video = opts.video || document.createElement('video');
-    video.setAttribute('autoplay', 'autoplay');
+
+    video.setAttribute('autoplay', true);
+    video.setAttribute('playsinline', true);
+    video.setAttribute('muted', true);
 
     return video;
   }
