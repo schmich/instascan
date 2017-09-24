@@ -55,6 +55,64 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 </html>
 ```
 
+### Zoom capability
+
+Some devices are capable to zooming.
+
+On your page, add a slider-controler:
+```html
+<input type="range" id="qrCodeZoomSlider" min="0" max="0" />
+```
+
+In your JavasScript code, after the `scanner.start()` call, add this block of code:
+
+```javascript
+// Camera to use
+var camera_index = 0;
+
+// Reference to input slider
+var zoomSlider = document.getElementById('qrCodeZoomSlider');
+
+// Hide the slider until it is ready
+zoomSlider.style.display = 'none';
+
+// Timeout needed in Chrome, see https://crbug.com/711524
+// 2-seconds should be way enough, 500-milliseconds might be too
+setTimeout(() => {
+  // Get the vieo track
+  var videoTrack = cameras[camera_index]._stream.getVideoTracks()[0];
+
+  // No video track found, cancel zoom support
+  if (videoTrack == null) {
+    return;
+  }
+
+  // Get capabilities from the camera
+  const capabilities = videoTrack.getCapabilities();
+
+  // No zoom support, cancel
+  if (!capabilities.zoom) {
+    return;
+  }
+
+  // Set slider properties based on camera capabilities
+  zoomSlider.min = capabilities.zoom.min;
+  zoomSlider.max = capabilities.zoom.max;
+  zoomSlider.step = capabilities.zoom.step;
+  zoomSlider.value = videoTrack.getSettings().zoom;
+
+  // On slider change, update camera zoom
+  zoomSlider.oninput = function() {
+    videoTrack.applyConstraints({advanced : [{zoom: zoomSlider.value}] });
+  };
+
+  // Ready to show slider
+  zoomSlider.style.display = '';
+}, 2000);
+```
+
+If the slider doesn't show, your device might not support zoom.
+
 ## API
 
 ### let scanner = new Instascan.Scanner(opts)
