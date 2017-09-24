@@ -57,7 +57,7 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
 
 ### Zoom capability
 
-Some devices are capable to zooming.
+Some devices are capable of zooming.
 
 On your page, add a slider-controler:
 ```html
