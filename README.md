@@ -137,8 +137,10 @@ let opts = {
 - If `opts.video` element was specified, it will have the `inactive` CSS class.
 - `callback`: `function ()`
 
-### Instascan.Camera.getCameras()
+### Instascan.Camera.getCameras(options)
 
+- Passes `options` along to getUserMedia ([see available options](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Parameters)).
+  - Defaults to `{ video: { facingMode: 'environment' } }` which will prefer the rear-facing camera if available.
 - Enumerate available video devices. Returns promise.
 - `.then(function (cameras) { ... })`
   - Called when cameras are available.
