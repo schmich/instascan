@@ -137,8 +137,10 @@ let opts = {
 - If `opts.video` element was specified, it will have the `inactive` CSS class.
 - `callback`: `function ()`
 
-### Instascan.Camera.getCameras()
+### Instascan.Camera.getCameras(options)
 
+- Passes `options` along to getUserMedia ([see available options](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Parameters)).
+  - Defaults to `{ video: { facingMode: 'environment' } }` which will prefer the rear-facing camera if available.
 - Enumerate available video devices. Returns promise.
 - `.then(function (cameras) { ... })`
   - Called when cameras are available.
@@ -159,9 +161,7 @@ let opts = {
 
 ## Compatibility
 
-Instascan works on non-iOS platforms in [any browser that supports the WebRTC/getUserMedia API](http://caniuse.com/#feat=stream), which currently includes Chome, Firefox, Opera, and Edge. IE and Safari are not supported.
-
-Instascan does not work on iOS since Apple does not yet support WebRTC in WebKit *and* forces other browser vendors (Chrome, Firefox, Opera) to use their implementation of WebKit. [Apple is actively working on WebRTC support in WebKit](https://bugs.webkit.org/show_bug.cgi?id=124288).
+Instascan works in [any browser that supports the WebRTC/getUserMedia API](http://caniuse.com/#feat=stream), which currently includes Chrome, Safari, Firefox, Opera, and Edge. IE is not supported.
 
 ## Performance
 

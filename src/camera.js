@@ -50,8 +50,10 @@ class Camera {
     this._stream = null;
   }
 
-  static async getCameras() {
-    await this._ensureAccess();
+  static async getCameras(options) {
+    let defaults = { video: { facingMode: 'environment' } };
+    let constraints = Object.assign({}, defaults, options);
+    await this._ensureAccess(constraints);
 
     let devices = await navigator.mediaDevices.enumerateDevices();
     return devices
@@ -59,9 +61,9 @@ class Camera {
       .map(d => new Camera(d.deviceId, cameraName(d.label)));
   }
 
-  static async _ensureAccess() {
+  static async _ensureAccess(constraints) {
     return await this._wrapErrors(async () => {
-      let access = await navigator.mediaDevices.getUserMedia({ video: true });
+      let access = await navigator.mediaDevices.getUserMedia(constraints);
       for (let stream of access.getVideoTracks()) {
         stream.stop();
       }
