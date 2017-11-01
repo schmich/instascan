@@ -370,4 +370,4 @@ class Scanner extends EventEmitter {
   }
 }
 
-module.exports = Scanner;
+export default Scanner;

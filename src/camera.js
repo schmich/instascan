@@ -81,4 +81,4 @@ class Camera {
   }
 }
 
-module.exports = Camera;
+export default Camera;
