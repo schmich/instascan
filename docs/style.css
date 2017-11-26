@@ -75,3 +75,30 @@ body, html {
   width: 100%;
   overflow: hidden;
 }
+
+@keyframes scanner {
+  from { background-position: center 0%; }
+  to { background-position: center 90%; }
+}
+
+@keyframes flash {
+ 0% { background-color: #ffffffff }
+ 100% { background-color: #ffffff05; }
+}
+
+.preview-container.active:after {
+  content: "";
+  position: absolute;
+  min-width: 100%;
+  min-height: 100%;
+
+  animation: scanner 5s linear infinite;
+  background-size: 50% 10%;
+  background-image: linear-gradient(0deg, yellow 0%, transparent 10%);
+  background-position: center 90%;
+  background-repeat: no-repeat;
+}
+
+.preview-container.flash:after {
+  animation: flash 1s;
+}
