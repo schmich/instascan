@@ -1,5 +1,7 @@
 language: node_js
   - '6'
+git:
+  depth: 5
 install: npm install
 script: gulp release
 env:
