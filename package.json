@@ -39,6 +39,7 @@
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.5.4",
+    "gulp-util": "^3.0.8",
     "uglifyjs-webpack-plugin": "^1.2.6",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",

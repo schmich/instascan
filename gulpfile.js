@@ -5,6 +5,9 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
 var babelify = require('babelify');
+const gutil = require("gulp-util");
+const webpack = require('webpack');
+const config = require('./webpack.config.js');
 
 gulp.task('default', ['build', 'watch']);
 
@@ -27,11 +30,12 @@ function build(file) {
 }
 
 gulp.task('release', function () {
-  return build('./export.js')
-    .pipe(buffer())
-    .pipe(uglify())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest('./dist/'));
+  return webpack(config, function(err, stats) {
+    if (err) throw new gutil.PluginError("webpack", err);
+    gutil.log("[webpack]", stats.toString({
+      // output options
+    }));
+  });
 });
 
 gulp.task('build', function () {
