@@ -3,7 +3,7 @@ language: node_js
 install: npm install
 before_script:
   - npm install -g gulp-cli
-script: gulp release
+script: gulp production
 env:
   global:
     - COMMIT_AUTHOR_NAME: "'Chris Schmich'"

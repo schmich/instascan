@@ -1,5 +1,4 @@
-var path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const path = require('path');
 
 module.exports = {
   node: {
@@ -7,7 +6,7 @@ module.exports = {
   },
   entry: {
     "instascan": "./index.js",
-    "instascan.min": "./index.js",
+    "instascan.min": "./index.js"
   },
   devtool: "source-map",
   output: {
@@ -15,10 +14,15 @@ module.exports = {
     filename: '[name].js',
     libraryTarget: 'umd'
   },
-  plugins: [
-    new UglifyJsPlugin({
-      include: /\.min.*/,
-      sourceMap: true
-    })
-  ]
+  plugins: [],
+  module: {
+    rules: [{
+      test: /\.js$/,
+      exclude: path.join(__dirname, 'src', 'zxing.js'),
+      include: path.join(__dirname, 'src'),
+      use: {
+        loader: 'babel-loader'
+      }
+    }]
+  }
 };
