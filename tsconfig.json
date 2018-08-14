@@ -1,0 +1,26 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "dom",
+      "es6",
+      "es7"
+    ],
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "target": "esnext",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "sourceRoot": "./",
+    "declaration": true,
+    "declarationDir": "./dist",
+    "inlineSourceMap": true
+  },
+  "files": [
+    "src/**/*.ts"
+  ]
+}

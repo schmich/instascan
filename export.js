@@ -1,1 +1,0 @@
-window.Instascan = require('./index');
