@@ -35,18 +35,23 @@
     "@types/node": "^10.7.0",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
+    "browserify": "^16.2.2",
     "event-stream": "^3.3.4",
     "gulp": "^3.9.1",
-    "gulp-rename": "^1.4.0",
     "gulp-typescript": "^5.0.0-alpha.3",
-    "gulp-uglify": "^3.0.1",
     "ts-node": "^7.0.1",
-    "typescript": "^3.0.1"
+    "tsify": "^4.0.0",
+    "typescript": "^3.0.1",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
     "@zxing/library": "^0.8.0",
     "fsm-as-promised": "^0.13.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-uglify-es": "^1.0.4",
     "regenerator-runtime": "^0.12.1",
-    "visibilityjs": "^1.2.3"
+    "visibilityjs": "^1.2.3",
+    "webrtc-adapter": "^6.3.2"
   }
 }

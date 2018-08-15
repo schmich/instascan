@@ -1,4 +1,5 @@
 import "regenerator-runtime/runtime";
+import "webrtc-adapter";
 
 import Camera from "./Camera";
 import Scanner from "./Scanner";
@@ -42,6 +43,10 @@ export interface ScannerOptions {
     * When false, this reduces CPU usage when the tab is not active. Default true.
     */
     backgroundScan?: boolean;
+  
+    // Only applies to continuous mode. The period, in milliseconds, before the same QR code
+    // will be recognized in succession. Default 5000 (5 seconds).
+    refractoryPeriod?: number;
 
     /**
     * Only applies to continuous mode. The period, in milliseconds, between scans. A lower scan period

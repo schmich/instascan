@@ -5,10 +5,15 @@ function cameraName( label: string ) {
 
 class MediaError extends Error {
 	type: string;
+	inner: Error;
 
-	constructor( type ) {
-		super( `Cannot access video stream (${type}).` );
+	constructor( type, inner?: Error ) {
+		super( inner
+			? `Cannot access video stream (${type}: ${inner.message}).`
+			: `Cannot access video stream (${type}).` );
+
 		this.type = type;
+		this.inner = inner;
 	}
 }
 
@@ -25,14 +30,16 @@ export default class Camera {
 	}
 
 	async start() {
-		let constraints: MediaStreamConstraints = {
+		let constraints: any = {
 			audio: false,
 			video: {
-				advanced: [ {
-					deviceId: this.id,
-					width: { min: 600, max: 800 },
-					aspectRatio: { min: 1.6 }
-				} ]
+				mandatory: {
+					sourceId: this.id,
+					minWidth: 600,
+					maxWidth: 800,
+					minAspectRatio: 1.6
+				},
+				optional: []
 			}
 		};
 
@@ -79,7 +86,7 @@ export default class Camera {
 			return await fn();
 		} catch ( e ) {
 			if ( e.name && process.env.NODE_ENV !== "development" ) {
-				throw new MediaError( e.name );
+				throw new MediaError( e.name, e );
 			} else {
 				throw e;
 			}

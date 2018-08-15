@@ -1,5 +1,4 @@
 import ScanProvider from "./ScanProvider";
-import Camera from "./Camera";
 
 import { ScannerOptions, ScanPayload } from ".";
 import { EventEmitter } from "events";
@@ -13,7 +12,6 @@ export default class Scanner extends EventEmitter {
 
 	private _continuous: boolean;
 	private _mirror: boolean;
-	private _camera: Camera;
 	private _scanProvider: ScanProvider;
 	private _fsm: any;
 
@@ -24,13 +22,17 @@ export default class Scanner extends EventEmitter {
 		this.mirror = ( opts.mirror !== false );
 		this.backgroundScan = ( opts.backgroundScan !== false );
 		this._continuous = ( opts.continuous !== false );
-		this._camera = opts.camera;
 
 		let captureImage = opts.captureImage || false;
 		let scanPeriod = opts.scanPeriod || 500;
+		let refractoryPeriod = opts.refractoryPeriod || ( 5 * 1000 ); // 5 seconds
 
-		this._scanProvider = new ScanProvider( this, this._camera, this.video, captureImage, scanPeriod );
+		this._scanProvider = new ScanProvider( this, this.video, captureImage, scanPeriod, refractoryPeriod );
 		this._fsm = this.createStateMachine();
+		
+		if ( opts.camera ) {
+			this.camera = opts.camera;
+		}
 
 		Visibility.change( ( e, state ) => {
 			if ( state === 'visible' ) {
@@ -76,6 +78,14 @@ export default class Scanner extends EventEmitter {
 		if ( this._fsm.can( 'stop' ) ) {
 			await this._fsm.stop();
 		}
+	}
+	
+	set camera( camera ) {
+		this._scanProvider.camera = camera;
+	}
+	
+	get camera() {
+		return this._scanProvider.camera;
 	}
 
 	set captureImage( capture ) {
@@ -135,11 +145,11 @@ export default class Scanner extends EventEmitter {
 	}
 
 	private async enableScan() {
-		if ( !this._camera ) {
+		if ( !this.camera ) {
 			throw new Error( 'Camera is not defined.' );
 		}
 
-		let stream = await this._camera.start();
+		let stream = await this.camera.start();
 		this.video.srcObject = stream;
 
 		if ( this._continuous ) {
@@ -154,8 +164,8 @@ export default class Scanner extends EventEmitter {
 			this._scanProvider.stop();
 		}
 
-		if ( this._camera ) {
-			this._camera.stop();
+		if ( this.camera ) {
+			this.camera.stop();
 		}
 	}
 

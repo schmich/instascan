@@ -3,34 +3,37 @@ import Camera from "./Camera";
 import { BrowserQRCodeReader, Result } from "@zxing/library";
 import { ScanPayload } from ".";
 import { EventEmitter } from "events";
+import ZxingWrapper from "./ZxingWrapper";
 
 export default class ScanProvider {
     scanPeriod: number;
     captureImage: boolean;
     refractoryPeriod: number;
+    camera: Camera;
 
     private _emitter: EventEmitter;
-    private _camera: Camera;
     private _video: HTMLVideoElement;
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
     private _active: boolean;
-    private _reader: BrowserQRCodeReader;
+    private _lastResult: string;
+    private _refractoryTimeout: any;
+    private _reader: ZxingWrapper;
 
     constructor(
         emitter: EventEmitter,
-        camera: Camera,
         video: HTMLVideoElement,
         captureImage: boolean,
-        scanPeriod: number
+        scanPeriod: number,
+        refractoryPeriod: number
     ) {
         this.scanPeriod = scanPeriod;
+        this.refractoryPeriod = refractoryPeriod;
         this.captureImage = captureImage;
         this._emitter = emitter;
-        this._camera = camera;
         this._video = video;
         this._active = false;
-        this._reader = new BrowserQRCodeReader( scanPeriod );
+        this._reader = new ZxingWrapper( scanPeriod );
 
         // Initialize canvas
         this._canvas = document.createElement( "canvas" );
@@ -70,13 +73,24 @@ export default class ScanProvider {
     }
 
     private async doScan() {
-        let result = await this._reader.decodeFromInputVideoDevice( this._camera.id, this._video );
+        if ( !this.camera )
+            throw new Error( "No camera set" );
+
+        let result = await this._reader.decodeFromInputVideoDevice( this.camera.id, this._video );
         let payload = await this.analyze( result );
 
-        if ( payload && this._active ) {
-            process.nextTick( () => {
-                this._emitter.emit( "scan", payload.content, payload.image );
-            } );
+        if ( payload && payload.content !== this._lastResult && this._active ) {
+            this._lastResult = payload.content;
+
+            if ( this._refractoryTimeout )
+                clearTimeout( this._refractoryTimeout );
+                
+            setTimeout( () => {
+                this._refractoryTimeout = null;
+                this._lastResult = null;
+            }, this.refractoryPeriod);
+
+            process.nextTick( () => this._emitter.emit( "scan", payload.content, payload.image ) );
         }
 
         if ( this._active ) {

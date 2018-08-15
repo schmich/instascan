@@ -13,14 +13,9 @@
     "moduleResolution": "node",
     "module": "commonjs",
     "target": "esnext",
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "sourceRoot": "./",
-    "declaration": true,
-    "declarationDir": "./dist",
     "inlineSourceMap": true
   },
-  "files": [
-    "src/**/*.ts"
+  "exclude": [
+    "./dist/**"
   ]
 }
