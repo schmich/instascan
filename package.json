@@ -39,7 +39,9 @@
     "common-shakeify": "^0.5.0",
     "event-stream": "^3.3.4",
     "gulp": "^3.9.1",
+    "gulp-rename": "^1.4.0",
     "gulp-typescript": "^5.0.0-alpha.3",
+    "gulp-uglify-es": "^1.0.4",
     "ts-node": "^7.0.1",
     "tsify": "^4.0.0",
     "typescript": "^3.0.1",
@@ -49,8 +51,6 @@
   "dependencies": {
     "@zxing/library": "^0.8.0",
     "fsm-as-promised": "^0.13.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-uglify-es": "^1.0.4",
     "regenerator-runtime": "^0.12.1",
     "visibilityjs": "^1.2.3",
     "webrtc-adapter": "^6.3.2"
