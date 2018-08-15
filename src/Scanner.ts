@@ -81,6 +81,10 @@ export default class Scanner extends EventEmitter {
 	}
 	
 	set camera( camera ) {
+		if ( this._scanProvider.camera ) {
+			this._scanProvider.camera.stop();
+		}
+		
 		this._scanProvider.camera = camera;
 	}
 	
