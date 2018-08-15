@@ -219,7 +219,7 @@ export default class Scanner extends EventEmitter {
 					await this.enableScan();
 					this.emit( 'active' );
 				},
-				onleaveactive: () => {
+				onleaveactive: async () => {
 					this.disableScan();
 					this.emit( 'inactive' );
 				},

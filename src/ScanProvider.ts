@@ -1,6 +1,6 @@
 import Camera from "./Camera";
 
-import { BrowserQRCodeReader, Result } from "@zxing/library";
+import { Result } from "@zxing/library";
 import { ScanPayload } from ".";
 import { EventEmitter } from "events";
 import ZxingWrapper from "./ZxingWrapper";
@@ -33,7 +33,7 @@ export default class ScanProvider {
         this._emitter = emitter;
         this._video = video;
         this._active = false;
-        this._reader = new ZxingWrapper( scanPeriod );
+        this._reader = new ZxingWrapper();
 
         // Initialize canvas
         this._canvas = document.createElement( "canvas" );
@@ -43,7 +43,7 @@ export default class ScanProvider {
 
     start() {
         this._active = true;
-        process.nextTick( () => this.doScan() );
+        process.nextTick( () => this.doScan( true ) );
     }
 
     stop() {
@@ -72,9 +72,12 @@ export default class ScanProvider {
         return { content, image };
     }
 
-    private async doScan() {
+    private async doScan( fromLoop?: boolean ) {
         if ( !this.camera )
             throw new Error( "No camera set" );
+
+        if ( fromLoop && !this._active )
+            return null;
 
         let result = await this._reader.decodeFromInputVideoDevice( this.camera.id, this._video );
         let payload = await this.analyze( result );
@@ -84,19 +87,17 @@ export default class ScanProvider {
 
             if ( this._refractoryTimeout )
                 clearTimeout( this._refractoryTimeout );
-                
-            setTimeout( () => {
+
+            this._refractoryTimeout = setTimeout( () => {
                 this._refractoryTimeout = null;
                 this._lastResult = null;
-            }, this.refractoryPeriod);
+            }, this.refractoryPeriod );
 
             process.nextTick( () => this._emitter.emit( "scan", payload.content, payload.image ) );
         }
 
-        if ( this._active ) {
-            // Start next scan
-            process.nextTick( () => this.doScan() );
-        }
+        // Start next scan
+        setTimeout( () => this.doScan( true ), this.scanPeriod );
 
         return payload;
     }

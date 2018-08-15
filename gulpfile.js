@@ -29,13 +29,14 @@ function build( opts ) {
 
 gulp.task( "default", [ "build" ] );
 
-gulp.task( "watch", function () {
+gulp.task( "watch", ["build"], function () {
     gulp.watch( "./src/*.ts", [ "build" ] );
 } );
 
 gulp.task( "release", function () {
     const options = {
         target: "es5",
+        sourceRoot: "./src",
         declaration: true,
         declarationDir: "./dist"
     };
