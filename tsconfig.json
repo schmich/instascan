@@ -1,0 +1,21 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "dom",
+      "es6",
+      "es7"
+    ],
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "target": "esnext",
+    "inlineSourceMap": true
+  },
+  "exclude": [
+    "./dist/**"
+  ]
+}

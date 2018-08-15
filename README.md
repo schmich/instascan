@@ -9,8 +9,28 @@ Real-time webcam-driven HTML5 QR code scanner. [Try the live demo](https://schmi
 
 `npm install --save instascan`
 
+JavaScript:
+
 ```javascript
 const Instascan = require('instascan');
+
+...
+
+Instascan.Camera.getCameras().then(cameras => {
+  // do something with the camera list
+});
+```
+
+TypeScript
+
+```typescript
+import { Camera, Scanner } from "instascan";
+
+...
+
+let cameras: Camera[] = await Camera.getCameras();
+
+// do something with the camera list
 ```
 
 ### Bower
@@ -43,7 +63,8 @@ Copy `instascan.min.js` from the [releases](https://github.com/schmich/instascan
       });
       Instascan.Camera.getCameras().then(function (cameras) {
         if (cameras.length > 0) {
-          scanner.start(cameras[0]);
+          scanner.camera = cameras[0];
+          scanner.start();
         } else {
           console.error('No cameras found.');
         }
@@ -67,6 +88,10 @@ let opts = {
   // If true, the scanner emits the "scan" event when a QR code is scanned. Default true.
   continuous: true,
   
+  // The camera to use for scanning. This can either be specified here in the options, or it
+  // can be set at a later time by setting the "scanner.camera" property.
+  camera: null,
+  
   // The HTML element to use for the camera's video preview. Must be a <video> element.
   // When the camera is active, this element will have the "active" CSS class, otherwise,
   // it will have the "inactive" class. By default, an invisible element will be created to
@@ -89,17 +114,17 @@ let opts = {
   // will be recognized in succession. Default 5000 (5 seconds).
   refractoryPeriod: 5000,
   
-  // Only applies to continuous mode. The period, in rendered frames, between scans. A lower scan period
-  // increases CPU usage but makes scan response faster. Default 1 (i.e. analyze every frame).
+  // Only applies to continuous mode. The period, in milliseconds, between scans. A lower scan
+  // period increases CPU usage but makes scan response faster. Default 500 (analyze every
+  // half-second)
   scanPeriod: 1
 };
 ```
 
-### scanner.start(camera)
+### scanner.start()
 
-- Activate `camera` and start scanning using it as the source. Returns promise.
-- This must be called in order to use [`scanner.scan`](#let-result--scannerscan) or receive [`scan`](#scanneraddlistenerscan-callback) events.
-- `camera`: Instance of `Instascan.Camera` from [`Instascan.Camera.getCameras`](#instascancameragetcameras).
+- Activate and start scanning using the currently set camera as the source. Returns promise.
+- This must be called in order to use [`scanner.scan`](#let-result--scannerscan) or receive [`scan`](#scanneraddlistenerscan-callback) events.(#instascancameragetcameras).
 - `.then(function () { ... })`: called when camera is active and scanning has started.
 - `.catch(function (err) { ... })`
   - Called when an error occurs trying to initialize the camera for scanning.
