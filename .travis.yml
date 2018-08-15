@@ -1,6 +1,7 @@
 language: node_js
   - '6'
 install: npm install
+before_script: npm install -g gulp-cli
 script: gulp release
 env:
   global:
