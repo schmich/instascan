@@ -174,7 +174,7 @@ If you control creation of the QR code, consider the following:
 - Include a sufficient quiet zone, the white border surrounding QR code. The quiet zone should be at least four times the width of an individual element in your QR code.
 - A simpler code is better. You can use [this QR code generator](https://www.the-qrcode-generator.com/) to see how your input affects complexity.
 - For the same length, numeric content is simpler than ASCII content, which is simpler than Unicode content.
-- Shorter content is simpler. If you're encoding a URL, consider using a shortener such as [goo.gl](https://goo.gl/) or [bit.ly](https://bitly.com/).
+- Shorter content is simpler. If you're encoding a URL, consider using a shortener such as [bit.ly](https://bitly.com/).
 
 When scanning, consider the following:
 
