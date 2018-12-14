@@ -19,7 +19,7 @@ class Camera {
 
   async start() {
     this._stream = await Camera._wrapErrors(async () => {
-      return navigator.mediaDevices.getUserMedia({
+      return await navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {
           deviceId: {
@@ -56,8 +56,11 @@ class Camera {
   }
 
   static async _ensureAccess() {
-    return this._wrapErrors(async () => {
-      await navigator.mediaDevices.getUserMedia({ video: true });
+    return await this._wrapErrors(async () => {
+      let access = await navigator.mediaDevices.getUserMedia({ video: true });
+      for (let stream of access.getVideoTracks()) {
+        stream.stop();
+      }
     });
   }
 

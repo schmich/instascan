@@ -318,8 +318,10 @@ class Scanner extends EventEmitter {
     let video = opts.video || document.createElement('video');
 
     video.setAttribute('autoplay', true);
-    video.setAttribute('playsinline', true);
-    video.setAttribute('muted', true);
+    if (/iP(hone|(o|a)d)/.test(navigator.userAgent)) {
+      video.setAttribute('playsinline', 'playsinline');
+      video.setAttribute('muted', 'muted');
+    }
 
     return video;
   }
