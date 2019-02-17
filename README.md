@@ -1,6 +1,23 @@
 # ![Instascan](https://raw.githubusercontent.com/schmich/instascan/master/assets/qr.png) Instascan
 Real-time webcam-driven HTML5 QR code scanner. [Try the live demo](https://schmich.github.io/instascan/).
 
+## Important and Remind
+1. add **adapter.js** from https://github.com/webrtc/adapter
+2. add **instascan.min.js** from /dist directory
+3. if yous ios devices's preview video is not working, please add attribute *playsinline* and *control* in video tag. Or use the js below
+   ```
+    let video = document.getElementById("preview");
+    video.setAttribute("playsinline", true);
+    video.setAttribute("controls", true);
+    setTimeout(() => {
+        video.removeAttribute("controls");
+    });
+    ```
+
+## Build min.js
+1. `npm i`
+2. `gulp release`
+
 ## Installing
 
 *Note:* Chrome requires HTTPS when using the WebRTC API. Any pages using this library should be served over HTTPS.
