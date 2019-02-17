@@ -29,8 +29,6 @@ var mockImportsInZXing = function (content, file) {
   }
 };
 
-gulp.task('default', ['build', 'watch']);
-
 gulp.task('watch', function () {
   gulp.watch('./src/*.js', ['build']);
   gulp.watch('./*.js', ['build']);
@@ -43,12 +41,12 @@ gulp.task('build-package', function () {
     .pipe(gulp.dest('./lib/'));
 });
 
-gulp.task('build', ['build-package'], function () {
+gulp.task('build', function () {
   return build('./export.js')
     .pipe(gulp.dest('./dist/'));
 });
 
-gulp.task('release', ['build-package'], function () {
+gulp.task('release', function () {
   return build('./export.js')
     .pipe(buffer())
     .pipe(uglify())
