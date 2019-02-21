@@ -5,6 +5,29 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
 var babelify = require('babelify');
+var babel = require('gulp-babel');
+var transform = require('gulp-transform');
+
+var babelOptions = {
+  ignore: /zxing\.js$/i,
+  presets: ['env'],
+  plugins: ['transform-runtime']
+};
+
+var build = function (file) {
+  return browserify(file, { noParse: [ require.resolve('./src/vendor/zxing') ] })
+    .transform(babelify, babelOptions)
+    .bundle()
+    .pipe(source('instascan.js'));
+}
+
+var mockImportsInZXing = function (content, file) {
+  if (/zxing\.js$/i.test(file.relative)) {
+    return content.replace(/require\([^)]+\)/g, '{}');
+  } else {
+    return content;
+  }
+};
 
 gulp.task('default', ['build', 'watch']);
 
@@ -13,28 +36,22 @@ gulp.task('watch', function () {
   gulp.watch('./*.js', ['build']);
 });
 
-function build(file) {
-  return browserify(file, {
-      noParse: [require.resolve('./src/zxing')]
-    })
-    .transform(babelify, {
-      ignore: /zxing\.js$/i,
-      presets: ['es2015'],
-      plugins: ['syntax-async-functions', 'transform-regenerator']
-    })
-    .bundle()
-    .pipe(source('instascan.js'));
-}
+gulp.task('build-package', function () {
+  return gulp.src('./src/**/*.js')
+    .pipe(transform('utf-8', mockImportsInZXing))
+    .pipe(babel(babelOptions))
+    .pipe(gulp.dest('./lib/'));
+});
 
-gulp.task('release', function () {
+gulp.task('build', ['build-package'], function () {
+  return build('./export.js')
+    .pipe(gulp.dest('./dist/'));
+});
+
+gulp.task('release', ['build-package'], function () {
   return build('./export.js')
     .pipe(buffer())
     .pipe(uglify())
     .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest('./dist/'));
-});
-
-gulp.task('build', function () {
-  return build('./export.js')
     .pipe(gulp.dest('./dist/'));
 });
