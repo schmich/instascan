@@ -50,8 +50,10 @@ class Camera {
     this._stream = null;
   }
 
-  static async getCameras() {
-    await this._ensureAccess();
+  static async getCameras(ensureAccess = false) {
+    if (ensureAccess) {
+      await this._ensureAccess();
+    }
 
     let devices = await navigator.mediaDevices.enumerateDevices();
     return devices
