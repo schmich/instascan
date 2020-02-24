@@ -2,13 +2,14 @@
   "name": "instascan",
   "version": "1.0.0",
   "description": "Webcam-driven QR code scanner.",
-  "main": "index.js",
+  "main": "dist/instascan.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "gulp build",
+    "release": "gulp release",
+    "umd": "gulp umd"
   },
   "files": [
-    "src/",
-    "index.js"
+    "dist/"
   ],
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.5.4",
+    "gulp-umd": "^2.0.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },

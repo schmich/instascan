@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var rename = require('gulp-rename');
+var umd = require('gulp-umd');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
@@ -36,5 +37,11 @@ gulp.task('release', function () {
 
 gulp.task('build', function () {
   return build('./export.js')
+    .pipe(gulp.dest('./dist/'));
+});
+
+gulp.task('umd', ['build'], function () {
+  return gulp.src('./dist/instascan.js')
+    .pipe(umd())
     .pipe(gulp.dest('./dist/'));
 });
