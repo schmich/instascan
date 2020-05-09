@@ -98,7 +98,13 @@ class Analyzer {
 
     this.decodeCallback = ZXing.Runtime.addFunction(function (ptr, len, resultIndex, resultCount) {
       let result = new Uint8Array(ZXing.HEAPU8.buffer, ptr, len);
-      let str = String.fromCharCode.apply(null, result);
+      let str;
+      if ('TextDecoder' in window) {
+        str = new TextDecoder('utf-8').decode(result);
+      } else {
+        // Fallback
+        str = String.fromCharCode.apply(null, result);
+      }
       if (resultIndex === 0) {
         window.zxDecodeResult = '';
       }
