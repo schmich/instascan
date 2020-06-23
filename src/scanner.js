@@ -2,6 +2,7 @@ const EventEmitter = require('events');
 const ZXing = require('./zxing')();
 const Visibility = require('visibilityjs');
 const StateMachine = require('fsm-as-promised');
+const Encoding = require('./encoding.min.js');
 
 class ScanProvider {
   constructor(emitter, analyzer, captureImage, scanPeriod, refractoryPeriod) {
@@ -98,7 +99,13 @@ class Analyzer {
 
     this.decodeCallback = ZXing.Runtime.addFunction(function (ptr, len, resultIndex, resultCount) {
       let result = new Uint8Array(ZXing.HEAPU8.buffer, ptr, len);
-      let str = String.fromCharCode.apply(null, result);
+      let detected Encoding.detect(result);
+      let str = Encoding.convert(result, {
+    	from: detected,
+    	to: 'UNICODE',
+    	type: 'string',
+      });
+      //let str = String.fromCharCode.apply(null, result);
       if (resultIndex === 0) {
         window.zxDecodeResult = '';
       }
