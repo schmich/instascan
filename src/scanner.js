@@ -2,12 +2,14 @@ const EventEmitter = require('events');
 const ZXing = require('./zxing')();
 const Visibility = require('visibilityjs');
 const StateMachine = require('fsm-as-promised');
+const Encoding = require('encoding-japanese');
 
 class ScanProvider {
-  constructor(emitter, analyzer, captureImage, scanPeriod, refractoryPeriod) {
+  constructor(emitter, analyzer, captureImage, scanPeriod, refractoryPeriod, inferEncoding) {
     this.scanPeriod = scanPeriod;
     this.captureImage = captureImage;
     this.refractoryPeriod = refractoryPeriod;
+    this.inferEncoding = inferEncoding;
     this._emitter = emitter;
     this._frameCount = 0;
     this._analyzer = analyzer;
@@ -83,7 +85,7 @@ class ScanProvider {
 }
 
 class Analyzer {
-  constructor(video) {
+  constructor(video, inferEncoding) {
     this.video = video;
 
     this.imageBuffer = null;
@@ -98,7 +100,17 @@ class Analyzer {
 
     this.decodeCallback = ZXing.Runtime.addFunction(function (ptr, len, resultIndex, resultCount) {
       let result = new Uint8Array(ZXing.HEAPU8.buffer, ptr, len);
-      let str = String.fromCharCode.apply(null, result);
+      let str;
+      if (inferEncoding) {
+      	let detected = Encoding.detect(result);
+      	str = Encoding.convert(result, {
+    	  from: detected,
+    	  to: 'UNICODE',
+    	  type: 'string',
+     	});
+      } else {
+        str = String.fromCharCode.apply(null, result);
+      }
       if (resultIndex === 0) {
         window.zxDecodeResult = '';
       }
@@ -163,15 +175,16 @@ class Scanner extends EventEmitter {
     this.video = this._configureVideo(opts);
     this.mirror = (opts.mirror !== false);
     this.backgroundScan = (opts.backgroundScan !== false);
+    let inferEncoding = opts.inferEncoding || false;
     this._continuous = (opts.continuous !== false);
-    this._analyzer = new Analyzer(this.video);
+    this._analyzer = new Analyzer(this.video, inferEncoding);
     this._camera = null;
 
     let captureImage = opts.captureImage || false;
     let scanPeriod = opts.scanPeriod || 1;
     let refractoryPeriod = opts.refractoryPeriod || (5 * 1000);
 
-    this._scanner = new ScanProvider(this, this._analyzer, captureImage, scanPeriod, refractoryPeriod);
+    this._scanner = new ScanProvider(this, this._analyzer, captureImage, scanPeriod, refractoryPeriod, inferEncoding);
     this._fsm = this._createStateMachine();
 
     Visibility.change((e, state) => {
@@ -242,6 +255,14 @@ class Scanner extends EventEmitter {
 
   get refractoryPeriod() {
     return this._scanner.refractoryPeriod;
+  }
+
+  set inferEncoding(encoding) {
+    this._scanner.inferEncoding = encoding;
+  }
+
+  get inferEncoding() {
+    return this._scanner.inferEncoding;
   }
 
   set continuous(continuous) {
