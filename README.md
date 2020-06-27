@@ -91,7 +91,12 @@ let opts = {
   
   // Only applies to continuous mode. The period, in rendered frames, between scans. A lower scan period
   // increases CPU usage but makes scan response faster. Default 1 (i.e. analyze every frame).
-  scanPeriod: 1
+  scanPeriod: 1,
+
+  // Whether to infer the encoding of the scanned QR code.
+  // Available encodings are as follows: UTF32, UTF16, UTF16BE, UTF16LE, BINARY, ASCII, JIS, UTF8, EUCJP, SJIS, UNICODE.
+  // Default false.
+  inferEncoding: false
 };
 ```
 
