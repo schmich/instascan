@@ -1,7 +1,8 @@
-body, html {
+body,
+html {
   padding: 0;
   margin: 0;
-  font-family: 'Helvetica Neue', 'Calibri', Arial, sans-serif;
+  font-family: "Helvetica Neue", "Calibri", Arial, sans-serif;
   height: 100%;
 }
 #app {
@@ -21,7 +22,7 @@ body, html {
 }
 .sidebar h2 {
   font-weight: normal;
-  font-size: 1.0rem;
+  font-size: 1rem;
   background: #607d8b;
   color: #fff;
   padding: 10px;
@@ -74,4 +75,30 @@ body, html {
   display: flex;
   width: 100%;
   overflow: hidden;
+}
+
+#preview {
+  width: 70%;
+  height: 100%;
+  padding: 0;
+  position: relative;
+  object-fit: cover;
+}
+
+.videobox {
+  position: absolute;
+  height: 400px;
+  width: 400px;
+  font-size: 2em;
+  padding: 1.25em;
+  background-repeat: no-repeat;
+  background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%;
+  background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%;
+  border-radius: 15px;
+  background-size: 2.6666666667em 2.6666666667em, 2.6666666667em 2.6666666667em,
+    2.6666666667em 2.6666666667em, 2.6666666667em 2.6666666667em;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns=%22http:%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox=%220 0 80 80%22%3E%3Cpolygon points=%2280 0 20 0 0 0 0 20 0 80 20 80 20 20 80 20 80 0%22 fill=%22%23fff%22 %2F%3E%3C%2Fsvg%3E"),
+    url("data:image/svg+xml;charset=utf8,%3Csvg xmlns=%22http:%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox=%220 0 80 80%22%3E%3Cpolygon points=%2280 0 20 0 0 0 0 20 0 80 20 80 20 20 80 20 80 0%22 fill=%22%23fff%22 transform=%22translate(80, 0) rotate(90)%22 %2F%3E%3C%2Fsvg%3E"),
+    url("data:image/svg+xml;charset=utf8,%3Csvg xmlns=%22http:%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox=%220 0 80 80%22%3E%3Cpolygon points=%2280 0 20 0 0 0 0 20 0 80 20 80 20 20 80 20 80 0%22 fill=%22%23fff%22 transform=%22translate(80, 80) rotate(180)%22 %2F%3E%3C%2Fsvg%3E"),
+    url("data:image/svg+xml;charset=utf8,%3Csvg xmlns=%22http:%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox=%220 0 80 80%22%3E%3Cpolygon points=%2280 0 20 0 0 0 0 20 0 80 20 80 20 20 80 20 80 0%22 fill=%22%23fff%22 transform=%22translate(0, 80) rotate(270)%22 %2F%3E%3C%2Fsvg%3E");
 }
