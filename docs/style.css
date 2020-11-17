@@ -78,8 +78,7 @@ html {
 }
 
 #preview {
-  width: 70%;
-  height: 100%;
+  width: 90%;
   padding: 0;
   position: relative;
   object-fit: cover;
