@@ -71,9 +71,11 @@ type chunk struct {
       if (self.decodedChunks === self.totalChunks)
       {
         self.finished = true;
-        data = Object.keys(self.chunks).reduce(function (previous, key) {
-          return previous + window.atob(self.chunks[key]["Data"]);
-        });
+        data = '';
+        for (var i =0; i<self.totalChunks; ++i)
+        {
+          data = data + window.atob(self.chunks[i]["Data"])
+        }
         b64Data = window.btoa(data);
         if(!self.scans.find(scan => scan.content  === data))  {
           self.scans.unshift({ date: +(Date.now()), content: data });  
