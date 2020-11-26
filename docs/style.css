@@ -13,8 +13,7 @@ body, html {
 }
 .sidebar {
   background: #eceff1;
-  min-width: 250px;
-  max-width: 50%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

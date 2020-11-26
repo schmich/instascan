@@ -50,6 +50,7 @@ type chunk struct {
     self.totalChunks = 0;
     self.scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5 });
     self.scanner.addListener('scan', function (content, image) {
+      if (self.finished)  { return; }
       try {
         JSON.parse(content);
       } catch (e) {
@@ -71,14 +72,12 @@ type chunk struct {
       {
         self.finished = true;
         data = Object.keys(self.chunks).reduce(function (previous, key) {
-          return previous + self.chunks[key]["Data"];
+          return previous + window.atob(self.chunks[key]["Data"]);
         });
+        b64Data = window.btoa(data);
         if(!self.scans.find(scan => scan.content  === data))  {
           self.scans.unshift({ date: +(Date.now()), content: data });  
         }
-        this.chunks = [];
-        this.decodedChunks =  0;
-        this.totalChunks = 0;
       }
     });
     Instascan.Camera.getCameras().then(function (cameras) {
@@ -104,7 +103,8 @@ type chunk struct {
       this.activeCameraId = camera.id;
       this.scanner.start(camera);
     },
-    retry: function() {
+    nextCode: function() {
+      this.finished = false;
       this.chunks = [];
       this.decodedChunks =  0;
       this.totalChunks = 0;
