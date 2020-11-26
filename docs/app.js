@@ -80,6 +80,9 @@ type chunk struct {
         if(!self.scans.find(scan => scan.content  === data))  {
           self.scans.unshift({ date: +(Date.now()), content: data });  
         }
+        if(!self.scans.find(scan => scan.content  === data))  {
+          self.scans.unshift({ date: +(Date.now()), content: b64Data });  
+        }
       }
     });
     Instascan.Camera.getCameras().then(function (cameras) {
