@@ -77,12 +77,8 @@ type chunk struct {
           data = data + window.atob(self.chunks[i]["Data"])
         }
         b64Data = window.btoa(data);
-        if(!self.scans.find(scan => scan.content  === data))  {
-          self.scans.unshift({ date: +(Date.now()), content: data });  
-        }
-        if(!self.scans.find(scan => scan.content  === data))  {
-          self.scans.unshift({ date: +(Date.now()), content: b64Data });  
-        }
+        self.scans.unshift({ date: +(Date.now()), content: data });  
+        self.scans.unshift({ date: +(Date.now()), content: b64Data });  
       }
     });
     Instascan.Camera.getCameras().then(function (cameras) {
