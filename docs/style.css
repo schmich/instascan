@@ -14,6 +14,7 @@ body, html {
 .sidebar {
   background: #eceff1;
   min-width: 250px;
+  max-width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -34,10 +35,7 @@ body, html {
 }
 .sidebar li {
   line-height: 175%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-wrap: none;
-  text-overflow: ellipsis;
+  overflow-wrap: break-word;
 }
 .cameras ul {
   padding: 15px 20px;
