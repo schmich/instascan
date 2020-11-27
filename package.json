@@ -4,7 +4,8 @@
   "description": "Webcam-driven QR code scanner.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bundle": "inline-script-tags docs/index.html docs/index_bundle.html && inline-stylesheets docs/index_bundle.html docs/index_bundle.html"
   },
   "files": [
     "src/",
@@ -39,6 +40,7 @@
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.5.4",
+    "inline-scripts": "^1.7.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
