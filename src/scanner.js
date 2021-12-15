@@ -111,7 +111,7 @@ class Analyzer {
       return null;
     }
 
-    if (!this.imageBuffer) {
+   // if (!this.imageBuffer) {
       let videoWidth = this.video.videoWidth;
       let videoHeight = this.video.videoHeight;
 
@@ -125,8 +125,8 @@ class Analyzer {
 
       this.canvasContext = this.canvas.getContext('2d');
       this.imageBuffer = ZXing._resize(this.sensorWidth, this.sensorHeight);
-      return null;
-    }
+     // return null;
+    //}
 
     this.canvasContext.drawImage(
       this.video,
